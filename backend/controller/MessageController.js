@@ -79,63 +79,55 @@ const sendMessage = async (req, res) => {
     }
 }
 
-
 const getRecentMessages = async (req, res) => {
   try {
-    const myId = new mongoose.Types.ObjectId(req.user.userId)
- // <== convert string to ObjectId
+    const myId = new mongoose.Types.ObjectId(req.user.userId); // convert string to objectID
 
     // Aggregate to get the latest message for each conversation
     const recentMessages = await MessageModel.aggregate([
-      {
-        $match: {
-          $or: [
-            { senderId: myId },
-            { receiverId: myId }
+      { $match: { $or: [{ senderId: myId }, { receiverId: myId }] } },
+      { $sort: { createdAt: -1 } }, // newest messages first
+      { $group: {
+        _id: {
+          $cond: [
+            { $eq: ["$senderId", myId] },
+            "$receiverId",
+            "$senderId"
           ]
-        }
-      },
-      {
-        $sort: { createdAt: -1 }
-      },
-      {
-        $group: {
-          _id: {
-            $cond: [
-              { $eq: ["$senderId", myId] },
-              "$receiverId",
-              "$senderId"
-            ]
-          }, // group by the other user ID in the conversation
-          text: { $first: "$text" },
-          createdAt: { $first: "$createdAt" }
-        }
-      }
+        }, // group by other user ID
+        text: { $first: "$text" },
+        createdAt: { $first: "$createdAt" },
+        receiverId: { $first: "$receiverId" }, // ADD: latest receiver
+        read: { $first: "$read" }              // ADD: latest read state
+      } }
     ]);
 
-    // Format result as an object: { userId: lastMessageText }
+    // Format recent messages for sidebar: { userId: lastMessageText }
     const result = {};
     recentMessages.forEach(msg => {
       result[msg._id.toString()] = msg.text;
     });
 
-    // Find users who have unread messages for current user
-const unreadMessages = await MessageModel.aggregate([
-  { $match: { receiverId: myId, read: false } },
-  { $group: { _id: "$senderId" } }
-]);
+    // Unread indicator relies on latest message being unread and sent to you
+    const unreadUsers = {};
+    recentMessages.forEach(msg => {
+      // Only mark as unread if last message was sent to me and still unread
+      if (
+        msg.receiverId &&
+        msg.receiverId.toString() === myId.toString() &&
+        msg.read === false
+      ) {
+        unreadUsers[msg._id.toString()] = true;
+      }
+    });
 
-const unreadUsers = {};
-unreadMessages.forEach(msg => {
-  unreadUsers[msg._id.toString()] = true;
-});
-
-    res.status(200).json({ success: true, recentMessages: result ,unreadUsers });
+    res.status(200).json({ success: true, recentMessages: result, unreadUsers });
   } catch (error) {
     console.log("Error in getRecentMessages:", error);
     res.status(500).json({ error: "getRecentMessages Controller Error", error });
   }
-}
+};
+
 
 
 const markMessagesRead = async (req, res) => {

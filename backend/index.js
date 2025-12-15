@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
+const colors = require('colors');
 const dotenv = require("dotenv");
 dotenv.config();
 const cookieParser = require("cookie-parser");
@@ -12,6 +13,7 @@ const BotRoute = require("./routes/BotRoute");
 const CredentialRoute = require("./routes/CredentialRoute");
 const MessageRoute = require("./routes/MessageRoute");
 const AuthToken = require("./middleware/tokenAuth");
+const Message = require("./model/MessageModel");
 const onlineUsers = new Set();
 const userSockets = new Map(); // userId -> socket.id
 
@@ -35,7 +37,7 @@ server.use(
 );
 server.use(express.json());
 server.use(cookieParser());
-server.use(morgan("dev"));
+// server.use(morgan("dev"));
 
 // DB Connect
 ConnectDB();
@@ -72,6 +74,22 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("online-user", Array.from(onlineUsers));
   });
 
+  // Handle "typing" event
+socket.on("typing", ({ to, from }) => {
+  const receiverSocketId = userSockets.get(to);
+  if (receiverSocketId) {
+    io.to(receiverSocketId).emit("typing", { from }); // send to receiver only
+  }
+});
+
+// Handle "stopTyping" event
+socket.on("stopTyping", ({ to, from }) => {
+  const receiverSocketId = userSockets.get(to);
+  if (receiverSocketId) {
+    io.to(receiverSocketId).emit("stopTyping", { from });
+  }
+});
+
   // 🧩 Handle messages (no DB save here)
   socket.on("message", (data) => {
     console.log("📩 New message:", data);
@@ -82,6 +100,24 @@ io.on("connection", (socket) => {
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("message", data);
       console.log(`Message sent to receiver: ${data.receiverId}`);
+    }
+  });
+
+  // Handle mark-messages-read event from frontend
+  socket.on("mark-messages-read", async ({ senderId, receiverId }) => {
+    try {
+      await Message.updateMany(
+        { senderId, receiverId, read: false },
+        { $set: { read: true } }
+      );
+
+      // Notify sender that their messages were read
+      const senderSocket = userSockets.get(senderId);
+      if (senderSocket) {
+        io.to(senderSocket).emit("messages-read", { receiverId });
+      }
+    } catch (error) {
+      console.error("Error marking messages as read:", error);
     }
   });
 
@@ -130,5 +166,5 @@ io.on("connection", (socket) => {
 
 const PORT = process.env.PORT || 9860;
 server1.listen(PORT, () => {
-  console.log(`Server is Started on port:${PORT}`);
+  console.log(`Server is Started on port:${PORT}`.bgMagenta);
 });

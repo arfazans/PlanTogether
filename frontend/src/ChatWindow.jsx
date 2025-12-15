@@ -8,9 +8,11 @@ const ChatWindow = ({ showChatbot, userid, sendigToUsersId }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
-  const { socket,updateRecentMessage,setUnreadUsers,unreadUsers   } = useContext(NoteContext);
+  const typingTimeoutRef = useRef(null);
+  const [isTyping, setIsTyping] = useState(false);
 
-
+  const { socket, updateRecentMessage, setUnreadUsers, unreadUsers } =
+    useContext(NoteContext);
 
   // 🔹 Scroll to bottom when new messages come
   useEffect(() => {
@@ -49,8 +51,9 @@ const ChatWindow = ({ showChatbot, userid, sendigToUsersId }) => {
         (data.senderId === sendigToUsersId && data.receiverId === userid)
       ) {
         setMessages((prev) => [...prev, data]);
-            // Update recent message for the conversation partner
-        const otherUserId = data.senderId === userid ? data.receiverId : data.senderId;
+        // Update recent message for the conversation partner
+        const otherUserId =
+          data.senderId === userid ? data.receiverId : data.senderId;
         updateRecentMessage(otherUserId, data.text);
       }
     };
@@ -59,7 +62,7 @@ const ChatWindow = ({ showChatbot, userid, sendigToUsersId }) => {
     return () => {
       socket.current.off("message", handleIncomingMessage);
     };
-  }, [userid, sendigToUsersId,socket, updateRecentMessage]);
+  }, [userid, sendigToUsersId, socket, updateRecentMessage]);
 
   // 🔹 Send message
   const handleSendMessage = async () => {
@@ -88,7 +91,6 @@ const ChatWindow = ({ showChatbot, userid, sendigToUsersId }) => {
 
         //for update sender sidebar recent message
         updateRecentMessage(sendigToUsersId, savedMessage.text);
-
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -105,54 +107,86 @@ const ChatWindow = ({ showChatbot, userid, sendigToUsersId }) => {
     }
   };
 
-//For mark read to true for seen message
- useEffect(() => {
-  if (!sendigToUsersId) return;
+  //For mark read to true for seen message
+  useEffect(() => {
+    if (!sendigToUsersId) return;
 
-  // Immediately clear the unread indicator locally
-  setUnreadUsers((prev) => {
-    if (!(sendigToUsersId in prev)) return prev; // no change if already cleared
-    const updated = { ...prev };
-    delete updated[sendigToUsersId];
-    return updated;
-  });
+    // Immediately clear the unread indicator locally
+    setUnreadUsers((prev) => {
+      if (!(sendigToUsersId in prev)) return prev; // no change if already cleared
+      const updated = { ...prev };
+      delete updated[sendigToUsersId];
+      return updated;
+    });
 
-  // Call backend and emit read event as before
-  const markRead = async () => {
-    try {
-      await axios.post(
-        `http://localhost:9860/message/read/${sendigToUsersId}`,
-        {},
-        { withCredentials: true }
-      );
+    // Call backend and emit read event as before
+    const markRead = async () => {
+      try {
+        await axios.post(
+          `http://localhost:9860/message/read/${sendigToUsersId}`,
+          {},
+          { withCredentials: true }
+        );
 
-      if (socket.current) {
-        socket.current.emit("read", {
-          senderId: sendigToUsersId,
-          receiverId: userid,
-        });
+        if (socket.current) {
+          socket.current.emit("read", {
+            senderId: sendigToUsersId,
+            receiverId: userid,
+          });
+        }
+      } catch (error) {
+        console.error("Error marking messages as read:", error);
       }
-    } catch (error) {
-      console.error("Error marking messages as read:", error);
-    }
+    };
+
+    markRead();
+  }, [sendigToUsersId, userid, socket, setUnreadUsers]);
+
+  //tping indicator Event
+  const handleTyping = () => {
+    if (!socket.current) return;
+    socket.current.emit("typing", { to: sendigToUsersId, from: userid });
+    // Reset the timer on each keystroke
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    typingTimeoutRef.current = setTimeout(() => {
+      socket.current.emit("stopTyping", { to: sendigToUsersId, from: userid });
+    }, 1500); // stops typing after 1.5s inactivity
   };
 
-  markRead();
-}, [sendigToUsersId, userid, socket, setUnreadUsers]);
+  useEffect(() => {
+    if (!socket.current) return;
 
+    const handleTyping = ({ from }) => {
+      if (from === sendigToUsersId) setIsTyping(true);
+    };
+    const handleStopTyping = ({ from }) => {
+      if (from === sendigToUsersId) setIsTyping(false);
+    };
+
+    socket.current.on("typing", handleTyping);
+    socket.current.on("stopTyping", handleStopTyping);
+
+    // Safety: remove the indicator when chat changes
+    return () => {
+      setIsTyping(false);
+      socket.current.off("typing", handleTyping);
+      socket.current.off("stopTyping", handleStopTyping);
+    };
+  }, [sendigToUsersId, socket]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-transparent border border-gray-300">
+    <div className="flex flex-col h-full w-full bg-[#edf0f3] border border-gray-300">
       {/* Messages */}
-<div className="flex flex-col flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex flex-col flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message) => (
           <div
             key={message.id}
             className={`max-w-[60%] px-[14px] py-[10px] rounded-2xl text-[15px] break-words backdrop-blur-md
     flex ${
       message.senderId === userid
-        ? "self-end bg-blue-500/20 text-white justify-end"
-        : "self-start bg-[rgba(165,42,42,0.25)] text-white justify-start"
+      ? "self-end bg-[#5B50A7] text-black justify-end"
+      : "self-start bg-[#CFD8DC] text-black justify-start"
+
     }`}
           >
             {message.text}
@@ -160,6 +194,14 @@ const ChatWindow = ({ showChatbot, userid, sendigToUsersId }) => {
         ))}
         <div ref={messagesEndRef} />
       </div>
+
+      {isTyping && (
+        <div className="self-start px-3 py-2 ml-4 mb-5 bg-gray-200 rounded-2xl max-w-max shadow flex items-center gap-1">
+          <span className="block w-2 h-2 bg-gray-500 rounded-full animate-pulse" />
+          <span className="block w-2 h-2 bg-gray-500 rounded-full animate-pulse delay-150" />
+          <span className="block w-2 h-2 bg-gray-500 rounded-full animate-pulse delay-300" />
+        </div>
+      )}
 
       {/* Input */}
       <div
@@ -171,7 +213,10 @@ const ChatWindow = ({ showChatbot, userid, sendigToUsersId }) => {
           <input
             type="text"
             value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+            onChange={(e) => {
+              setNewMessage(e.target.value);
+              handleTyping();
+            }}
             onKeyPress={handleKeyPress}
             placeholder="Message..."
             className="flex-1 w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"

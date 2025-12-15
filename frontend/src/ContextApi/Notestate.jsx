@@ -142,6 +142,24 @@ const NoteState = ({ children }) => {
     };
   }, [userId]);
 
+  // Mark messages as read when selecting a user
+  useEffect(() => {
+    if (selectedUserId && userId && socket.current) {
+      // Clear unread status locally
+      setUnreadUsers(prev => {
+        const updated = { ...prev };
+        delete updated[selectedUserId];
+        return updated;
+      });
+      
+      // Emit to server that messages are read
+      socket.current.emit('mark-messages-read', {
+        senderId: selectedUserId,
+        receiverId: userId
+      });
+    }
+  }, [selectedUserId, userId]);
+
   return (
     <NoteContext.Provider
       value={{

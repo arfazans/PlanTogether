@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import loginImage from "./assets/loginimage.png";
+import loginImage from "./assets/loginImage3.jpg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { NoteContext } from "./ContextApi/CreateContext";
@@ -26,7 +26,6 @@ function Login() {
       });
       console.log(result);
       if (result.status === 200) {
-
         setUserId(result.data.userId);
 
         alert("SignUp Successful");
@@ -48,8 +47,6 @@ function Login() {
       });
 
       if (result.status === 200) {
-
-
         setUserId(result.data.userId);
 
         alert("login Successful");
@@ -119,7 +116,7 @@ function Login() {
                       }
                     />
                     <button type="submit" className="flip-card__btn">
-                      Let`s go!
+                     <span>Let`s go!</span>
                     </button>
                   </form>
                 </div>
@@ -169,16 +166,24 @@ function Login() {
                       }
                     />
                     <button type="submit" className="flip-card__btn">
-                      Confirm!
+                        <span>Confirm!</span>
+
                     </button>
                   </form>
                 </div>
               </div>
-              ;
+
             </div>
           </StyledWrapper>
         </LoginWrapper>
+
         <ImageWrapper>
+          <h1 className="text-5xl text-blue-100 mb-2 font-extrabold text-nowrap">
+            Welcome To chatNation!!
+          </h1>
+          <h3 className="text-2xl text-blue-500 font-bold">
+            Your DigiTal World
+          </h3>
           <img src={loginImage} alt="Login visual" />
         </ImageWrapper>
       </InnerContainer>
@@ -248,10 +253,17 @@ const StyledWrapper = styled.div`
     margin-bottom: 18px;
     gap: 20px;
   }
+    .toggle-label{
+    font-size:1.2rem;
+    font-weight: 700;
+    color: var(--font-color);
+    opacity: 0.8;
+    transition: opacity 0.3s, text-decoration 0.3s;
+    }
 
   .toggle-label.active {
     opacity: 1;
-    text-decoration: underline;
+    text-decoration: bold;
   }
   .slider {
     width: 45px;
@@ -351,7 +363,7 @@ const StyledWrapper = styled.div`
     border-radius: 8px;
     border: 2px solid var(--main-color);
     box-shadow: 3px 3px var(--main-color);
-    background: #e5e5e5;
+    background: #edf0f3;
     left: 0;
     top: 0;
     -webkit-backface-visibility: hidden;
@@ -373,22 +385,23 @@ const StyledWrapper = styled.div`
     color: var(--main-color);
     margin: 10px 0 16px 0;
   }
-  .flip-card__input {
-    width: 98%;
-    max-width: 220px;
-    min-width: 145px;
-    height: 36px;
-    border-radius: 5px;
-    border: 2px solid var(--main-color);
-    background-color: var(--bg-color);
-    box-shadow: 2px 2px var(--main-color);
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--font-color);
-    padding: 2px 10px;
-    outline: none;
-    margin: 0;
-  }
+.flip-card__input {
+  width: 98%;
+  max-width: 220px;
+  min-width: 145px;
+  height: 36px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color); /* Match button border color */
+  background-color: var(--bg-color);
+  box-shadow: 2px 2px var(--main-color); /* Match button shadow */
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--font-color);
+  padding: 2px 10px;
+  outline: none;
+  margin: 0;
+}
+
   .flip-card__input::placeholder {
     color: var(--font-color-sub);
     opacity: 0.8;
@@ -396,24 +409,61 @@ const StyledWrapper = styled.div`
   .flip-card__input:focus {
     border: 2px solid var(--input-focus);
   }
-  .flip-card__btn {
-    margin: 10px 0 0 0;
-    width: 105px;
-    height: 36px;
-    border-radius: 5px;
-    border: 2px solid var(--main-color);
-    background: var(--bg-color);
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--main-color);
-    box-shadow: 2px 2px var(--main-color);
-    cursor: pointer;
-    transition: box-shadow 0.1s, transform 0.1s;
-  }
-  .flip-card__btn:active {
-    box-shadow: 0 0 var(--main-color);
-    transform: translate(2px, 2px);
-  }
+.flip-card__btn {
+  position: relative;
+  margin: 10px 0 0 0;
+  width: 105px;
+  height: 36px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  background: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--main-color);
+  box-shadow: 2px 2px var(--main-color);
+  cursor: pointer;
+  overflow: hidden;
+  transition: box-shadow 0.1s, transform 0.1s;
+}
+  .flip-card__btn:hover {
+  border: none;
+}
+
+.flip-card__btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;      /* Start hidden */
+  height: 100%;
+  background: #000;
+  transition: width 0.4s;
+  z-index: 1;      /* Sit underneath the span/text */
+  border-radius: 5px;
+}
+
+.flip-card__btn:hover::before {
+  width: 100%;    /* Fully covers the button on hover */
+
+}
+
+/* Make span (text) always above the sweep */
+.flip-card__btn span {
+  position: relative;
+  z-index: 2;
+  transition: color 0.2s;
+}
+
+/* Make text white for visibility on black */
+.flip-card__btn:hover span {
+  color: #fff;
+}
+
+.flip-card__btn:active {
+  box-shadow: 0 0 var(--main-color);
+  transform: translate(2px, 2px);
+}
+
   /* Responsive */
   @media (max-width: 480px) {
     .flip-card__inner {
@@ -449,7 +499,7 @@ const OuterContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to top right, #e2e2e2, #8e8e8e);
+  background: #232946;
   padding: 2rem;
   box-sizing: border-box;
 `;
@@ -458,7 +508,8 @@ const InnerContainer = styled.div`
   flex-direction: row;
   gap: 3rem;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  // box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow:#A0AEC0;
   padding: 2rem;
   width: 100%;
   max-width: 1200px;
@@ -474,11 +525,13 @@ const InnerContainer = styled.div`
   }
 
   /* Tailwind gradient equivalent, to top right from neutral-200 to neutral-600 */
-  background: linear-gradient(
-    to top right,
-    #e5e5e5,
-    /* roughly gray-200 */ #4a4a4a /* roughly gray-600 */
-  );
+  // background: linear-gradient(
+  //   to top right,
+  //   #e5e5e5,
+  //   /* roughly gray-200 */ #4a4a4a /* roughly gray-600 */
+  // );
+  background:#FFF9F3;.
+
 `;
 const LoginWrapper = styled.div`
   flex: 1 1 45%; /* allow shrinking but try to remain 45% width */
@@ -490,19 +543,53 @@ const LoginWrapper = styled.div`
 `;
 const ImageWrapper = styled.div`
   flex: 1 1 55%; /* allow shrinking but try to remain 55% width */
-  min-width: 400px;
-  max-width: 700px;
+  min-width: 700px;
+  flex-direction: column;
+  max-width: 800px;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
-
-  img {
-    max-width: 100%;
-    max-height: 480px;
-    object-fit: contain;
-    border-radius: 12px;
+  // border:2px solid black;
+  border-radius: 2rem;
+  box-shadow: 10px 10px 10px 5px rgba(0, 0, 0, 0.3);
+  // background: linear-gradient(to top right, #e2e2e2, #8e8e8e);
+  background: #232946;
+  h1 {
+    text-shadow: 0px 10px 10px rgba(0, 0, 0, 0.5);
   }
+  h3 {
+    color: #8392ab;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+img {
+  margin-top: 2rem;
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  box-shadow: 10px 10px 10px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 2rem;
+  animation: floatImage 3s ease-in-out infinite;
+  display: block;
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+
+@keyframes floatImage {
+  0% {
+    transform: translateY(0);  // Only Y axis
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 `;
 
 export default Login;

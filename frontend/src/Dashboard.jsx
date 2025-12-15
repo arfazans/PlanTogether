@@ -35,7 +35,7 @@ function Dashboard() {
   }, []);
 
   return (
-    <div className="h-screen w-full flex flex-col bg-gradient-to-tr from-neutral-200 to-neutral-500 relative">
+    <div className="h-screen w-full flex flex-col bg-[#232946] relative">
       <Navbar />
 
       <main className="flex-1 overflow-hidden">
@@ -48,62 +48,66 @@ function Dashboard() {
           style={{ height: "calc(100vh - 108px)" }}
         >
           {/* Left column - User sidebar */}
-          <div className="bg-neutral-700 rounded-t-2xl h-full flex flex-col">
-            <div className="text-white text-center p-1 text-xl border-2 font-extrabold border-black rounded-t-2xl">
+          <div className="bg-[#232946] rounded-t-2xl h-full flex flex-col">
+            <div className="text-white text-center p-1 text-xl  font-extrabold border-2 border-black rounded-t-2xl">
               Users
             </div>
-   {users.map((user, index) => (
-  <div
-    key={index}
-    onClick={() => handleUserSelect(user._id)}
-    className={`relative border-b-2 border-transparent pr-4 cursor-pointer p-2 m-2 rounded-lg transition-all duration-300 ease-in-out flex items-center
+            {users.map((user, index) => (
+              <div
+                key={index}
+                onClick={() => handleUserSelect(user._id)}
+                className={`relative border-b-2 border-transparent pr-4 cursor-pointer p-2 m-2 rounded-lg transition-all duration-300 ease-in-out flex items-center
       ${
         selectedUserId === user._id
           ? "bg-neutral-500 shadow-md shadow-gray-400/50 border-gray-300"
           : "bg-neutral-700 hover:border-black hover:pr-0 hover:m-0 hover:shadow-lg hover:shadow-gray-500/50"
       }`}
-  >
-    {/* Profile Image */}
-    <div className="w-10 h-10 rounded-full overflow-hidden border-2 flex-shrink-0 mr-2">
-      <img
-        src={aman} // Replace with user.profilePic if available
-        alt="User Avatar"
-        className="w-full h-full object-cover"
-      />
-    </div>
+              >
+                {/* Profile Image */}
+                <div className="w-10 h-10 rounded-full overflow-hidden border-2 flex-shrink-0 mr-2">
+                  <img
+                    src={aman} // Replace with user.profilePic if available
+                    alt="User Avatar"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
 
-    {/* Text Container */}
-    <div className="flex-1 flex flex-col justify-center h-10">
-      {/* Name and Online Row */}
-      <div className="flex items-center justify-start space-x-2 mb-1">
-        <h1 className="text-white font-semibold text-base truncate">{user.name}</h1>
-        {/* Online indicator */}
-        {onlineUsers.includes(String(user._id)) && (
-          <span className="text-green-400 text-xs font-semibold">online</span>
-        )}
-      </div>
+                {/* Text Container */}
+                <div className="flex-1 flex flex-col justify-center h-10">
+                  {/* Name and Online Row */}
+                  <div className="flex items-center justify-start space-x-2 mb-1">
+                    <h1 className="text-white font-semibold text-base truncate">
+                      {user.name}
+                    </h1>
+                    {/* Online indicator */}
+                    {onlineUsers.includes(String(user._id)) && (
+                      <span className="text-green-400 text-xs font-semibold">
+                        online
+                      </span>
+                    )}
+                  </div>
 
-      {/* Last message and unread dot row */}
-      <div className="flex items-center space-x-2">
-        <p className={`text-gray-300 text-xs truncate leading-tight ${
-          unreadUsers[user._id] ? "font-bold text-white" : ""
-        }`}>
-          {recentMessages[user._id] || "No messages yet"}
-        </p>
-        {/* Unread Dot Indicator at the same row as last message */}
-        {unreadUsers[user._id] && (
-          <span className="w-2 h-2 rounded-full bg-white"></span>
-        )}
-      </div>
-    </div>
-  </div>
-))}
+                  {/* Last message and unread dot row */}
+                  <div className="flex items-center space-x-2">
+                    <p
+                      className={`text-gray-300 text-xs leading-tight truncate max-w-[140px] ${
+                        unreadUsers[user._id] ? "font-bold text-white" : ""
+                      }`}
+                    >
+                      {recentMessages[user._id] || "No messages yet"}
+                    </p>
 
-
+                    {unreadUsers[user._id] && (
+                      <span className="w-2 h-2 rounded-full bg-white flex-shrink-0"></span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Middle column - Chat or welcome message */}
-          <div className="rounded-t-2xl bg-gradient-to-tr from-neutral-200 to-neutral-600 h-full overflow-hidden">
+          <div className="rounded-t-2xl bg-[#edf0f3] h-full overflow-hidden">
             {selectedUserId ? (
               <ChatWindow
                 sendigToUsersId={selectedUserId}
@@ -113,7 +117,7 @@ function Dashboard() {
             ) : (
               <div className="h-full flex items-center justify-center flex-col">
                 <h2 className="text-2xl ">
-                  Welcome To the TalkyNation || Where The talkative individuals
+                  Welcome To the chatNation || Where The talkative individuals
                   shine
                 </h2>
                 <p className="text-amber-50 ">
@@ -125,7 +129,7 @@ function Dashboard() {
 
           {/* Right column - Chatbot */}
           {showchatbot ? (
-            <div className="bg-neutral-700 rounded-t-2xl h-full">
+            <div className="bg-[#232946] rounded-t-2xl h-full">
               <Chatbot_Container onClose={() => setshowchatbot(false)} />
             </div>
           ) : (
