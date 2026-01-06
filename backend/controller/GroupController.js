@@ -152,7 +152,7 @@ const getGroupMessages = async (req, res) => {
     
     const messages = await Message.find({ 
       groupId,
-      messageType: 'group' 
+      messageType: { $in: ['group', 'poll'] }
     }).populate('senderId', 'name email')
       .sort({ createdAt: 1 })
       .limit(100); // Limit to last 100 messages

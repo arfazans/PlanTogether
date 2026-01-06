@@ -1,7 +1,7 @@
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
-const colors = require('colors');
+const colors = require("colors");
 const dotenv = require("dotenv");
 dotenv.config();
 const cookieParser = require("cookie-parser");
@@ -13,11 +13,11 @@ const BotRoute = require("./routes/BotRoute");
 const CredentialRoute = require("./routes/CredentialRoute");
 const MessageRoute = require("./routes/MessageRoute");
 const GroupRoute = require("./routes/GroupRoute");
+const PlanRoute = require("./routes/PlanRoute");
 const AuthToken = require("./middleware/tokenAuth");
 const Message = require("./model/MessageModel");
 const onlineUsers = new Set();
 const userSockets = new Map(); // userId -> socket.id
-
 
 const server = express();
 
@@ -47,13 +47,12 @@ server.use("/bot", BotRoute);
 server.use("/user", CredentialRoute);
 server.use("/message", AuthToken, MessageRoute);
 server.use("/group", AuthToken, GroupRoute);
-
-
+server.use("/plan", AuthToken, PlanRoute);
 
 io.on("connection", (socket) => {
   console.log("🟢 Socket connected:", socket.id);
 
- // Log current online users and userSockets map
+  // Log current online users and userSockets map
   console.log(`Current onlineUsers: ${Array.from(onlineUsers).join(", ")}`);
   console.log(`Current userSockets:`, [...userSockets.entries()]);
 
@@ -62,7 +61,7 @@ io.on("connection", (socket) => {
 
   // 🧩 When user comes online
   socket.on("user-online", (userId) => {
-     userId = String(userId);  // normalize to string
+    userId = String(userId); // normalize to string
     onlineUsers.add(userId);
     userSockets.set(userId, socket.id);
 
@@ -77,20 +76,20 @@ io.on("connection", (socket) => {
   });
 
   // Handle "typing" event
-socket.on("typing", ({ to, from }) => {
-  const receiverSocketId = userSockets.get(to);
-  if (receiverSocketId) {
-    io.to(receiverSocketId).emit("typing", { from }); // send to receiver only
-  }
-});
+  socket.on("typing", ({ to, from }) => {
+    const receiverSocketId = userSockets.get(to);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("typing", { from }); // send to receiver only
+    }
+  });
 
-// Handle "stopTyping" event
-socket.on("stopTyping", ({ to, from }) => {
-  const receiverSocketId = userSockets.get(to);
-  if (receiverSocketId) {
-    io.to(receiverSocketId).emit("stopTyping", { from });
-  }
-});
+  // Handle "stopTyping" event
+  socket.on("stopTyping", ({ to, from }) => {
+    const receiverSocketId = userSockets.get(to);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("stopTyping", { from });
+    }
+  });
 
   // 🧩 Handle messages (no DB save here)
   socket.on("message", (data) => {
@@ -123,7 +122,7 @@ socket.on("stopTyping", ({ to, from }) => {
     }
   });
 
-   // Add this new "read" event listener to mark messages as read
+  // Add this new "read" event listener to mark messages as read
   socket.on("read", async ({ senderId, receiverId }) => {
     try {
       await Message.updateMany(
@@ -142,7 +141,7 @@ socket.on("stopTyping", ({ to, from }) => {
   });
 
   // 🔹 GROUP SOCKET EVENTS
-  
+
   // Join group room
   socket.on("join-group", (groupId) => {
     socket.join(groupId);
@@ -173,6 +172,19 @@ socket.on("stopTyping", ({ to, from }) => {
     socket.to(groupId).emit("group-stop-typing", { from, userName });
   });
 
+  // Handle plan events
+  socket.on("plan-created", ({ groupId, plan, pollMessage }) => {
+    io.to(groupId).emit("plan-created", { groupId, plan, pollMessage });
+  });
+
+  socket.on("plan-updated", ({ groupId, plan }) => {
+    socket.to(groupId).emit("plan-updated", { groupId, plan });
+  });
+
+  socket.on("plan-deleted", ({ groupId, planId, pollMessageId }) => {
+    io.to(groupId).emit("plan-deleted", { groupId, planId, pollMessageId });
+  });
+
   // 🧩 Handle user logout
   socket.on("user-logout", (userId) => {
     onlineUsers.delete(userId);
@@ -183,8 +195,9 @@ socket.on("stopTyping", ({ to, from }) => {
 
   // 🧩 Handle disconnect
   socket.on("disconnect", () => {
-    const userId = [...userSockets.entries()]
-      .find(([uid, sId]) => sId === socket.id)?.[0];
+    const userId = [...userSockets.entries()].find(
+      ([uid, sId]) => sId === socket.id
+    )?.[0];
 
     if (userId) {
       onlineUsers.delete(userId);
@@ -195,8 +208,6 @@ socket.on("stopTyping", ({ to, from }) => {
     console.log("🔴 Socket disconnected:", socket.id);
   });
 });
-
-
 
 const PORT = process.env.PORT || 9860;
 server1.listen(PORT, () => {

@@ -81,7 +81,7 @@ const sendMessage = async (req, res) => {
 
 const getRecentMessages = async (req, res) => {
   try {
-    const myId = new mongoose.Types.ObjectId(req.user.userId); // convert string to objectID
+    const myId = mongoose.Types.ObjectId.createFromHexString(req.user.userId); // convert string to objectID
 
     // Aggregate to get the latest message for each conversation
     const recentMessages = await MessageModel.aggregate([
@@ -105,7 +105,9 @@ const getRecentMessages = async (req, res) => {
     // Format recent messages for sidebar: { userId: lastMessageText }
     const result = {};
     recentMessages.forEach(msg => {
-      result[msg._id.toString()] = msg.text;
+      if (msg._id) {
+        result[msg._id.toString()] = msg.text;
+      }
     });
 
     // Unread indicator relies on latest message being unread and sent to you
@@ -113,6 +115,7 @@ const getRecentMessages = async (req, res) => {
     recentMessages.forEach(msg => {
       // Only mark as unread if last message was sent to me and still unread
       if (
+        msg._id &&
         msg.receiverId &&
         msg.receiverId.toString() === myId.toString() &&
         msg.read === false

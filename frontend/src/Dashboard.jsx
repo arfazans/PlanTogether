@@ -38,6 +38,7 @@ function Dashboard() {
 
   // Fetch all users except the logged-in user for the sidebar
   useEffect(() => {
+
     axios.get(`${URL}/message/users`, { withCredentials: true }).then((res) => {
       if (res.data.success) {
         setUsers(res.data.users);
@@ -70,9 +71,9 @@ function Dashboard() {
           style={{ height: "calc(100vh - 108px)" }}
         >
           {/* Left column - User sidebar */}
-          <div className="bg-[#232946] rounded-t-2xl h-full flex flex-col">
-            <div className="flex border-2 border-black rounded-t-2xl overflow-hidden">
-              <button 
+          <div className="bg-[#232946] rounded-t-2xl h-full flex flex-col overflow-hidden">
+            <div className="flex border-2 border-black rounded-t-2xl overflow-hidden flex-shrink-0">
+              <button
                 onClick={() => setActiveTab('users')}
                 className={`flex-1 p-2 text-white font-bold transition-colors ${
                   activeTab === 'users' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'
@@ -80,7 +81,7 @@ function Dashboard() {
               >
                 Users
               </button>
-              <button 
+              <button
                 onClick={() => setActiveTab('groups')}
                 className={`flex-1 p-2 text-white font-bold transition-colors ${
                   activeTab === 'groups' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'
@@ -89,19 +90,21 @@ function Dashboard() {
                 Groups
               </button>
             </div>
+
+            {/* Scrollable content area */}
+            <div className="flex-1 overflow-y-auto p-2 space-y-2 scrollbar-hide">
             {activeTab === 'users' && users.map((user, index) => (
               <div
                 key={index}
                 onClick={() => handleUserSelect(user._id)}
-                className={`relative border-b-2 border-transparent pr-4 cursor-pointer p-2 m-2 rounded-lg transition-all duration-300 ease-in-out flex items-center
-      ${
+                className={`cursor-pointer p-3 rounded-lg transition-all duration-300 ease-in-out flex items-center ${
         selectedUserId === user._id
-          ? "bg-neutral-500 shadow-md shadow-gray-400/50 border-gray-300"
-          : "bg-neutral-700 hover:border-black hover:pr-0 hover:m-0 hover:shadow-lg hover:shadow-gray-500/50"
+          ? "bg-neutral-500 shadow-md shadow-gray-400/50"
+          : "bg-neutral-700 hover:bg-neutral-600 hover:shadow-lg hover:shadow-gray-500/50 hover:scale-[1.02]"
       }`}
               >
                 {/* Profile Image */}
-                <div className="w-10 h-10 rounded-full overflow-hidden border-2 flex-shrink-0 mr-2">
+                <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 mr-3">
                   <img
                     src={aman} // Replace with user.profilePic if available
                     alt="User Avatar"
@@ -110,10 +113,10 @@ function Dashboard() {
                 </div>
 
                 {/* Text Container */}
-                <div className="flex-1 flex flex-col justify-center h-10">
+                <div className="flex-1 min-w-0">
                   {/* Name and Online Row */}
-                  <div className="flex items-center justify-start space-x-2 mb-1">
-                    <h1 className="text-white font-semibold text-base truncate">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <h1 className="text-white font-semibold text-sm truncate">
                       {user.name}
                     </h1>
                     {/* Online indicator */}
@@ -127,7 +130,7 @@ function Dashboard() {
                   {/* Last message and unread dot row */}
                   <div className="flex items-center space-x-2">
                     <p
-                      className={`text-gray-300 text-xs leading-tight truncate max-w-[140px] ${
+                      className={`text-gray-300 text-xs truncate flex-1 ${
                         unreadUsers[user._id] ? "font-bold text-white" : ""
                       }`}
                     >
@@ -145,38 +148,38 @@ function Dashboard() {
               <div
                 key={index}
                 onClick={() => handleGroupSelect(group._id)}
-                className={`relative border-b-2 border-transparent pr-4 cursor-pointer p-2 m-2 rounded-lg transition-all duration-300 ease-in-out flex items-center
-      ${
+                className={`cursor-pointer p-3 rounded-lg transition-all duration-300 ease-in-out flex items-center ${
         selectedGroupId === group._id
-          ? "bg-neutral-500 shadow-md shadow-gray-400/50 border-gray-300"
-          : "bg-neutral-700 hover:border-black hover:pr-0 hover:m-0 hover:shadow-lg hover:shadow-gray-500/50"
+          ? "bg-neutral-500 shadow-md shadow-gray-400/50"
+          : "bg-neutral-700 hover:bg-neutral-600 hover:shadow-lg hover:shadow-gray-500/50 hover:scale-[1.02]"
       }`}
               >
                 {/* Group Icon */}
-                <div className="w-10 h-10 rounded-full overflow-hidden border-2 flex-shrink-0 mr-2 bg-blue-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full flex-shrink-0 mr-3 bg-blue-500 flex items-center justify-center">
                   <span className="text-white font-bold text-sm">
                     {group.name.charAt(0).toUpperCase()}
                   </span>
                 </div>
 
                 {/* Text Container */}
-                <div className="flex-1 flex flex-col justify-center h-10">
+                <div className="flex-1 min-w-0">
                   {/* Group name */}
-                  <div className="flex items-center justify-start space-x-2 mb-1">
-                    <h1 className="text-white font-semibold text-base truncate">
+                  <div className="mb-1">
+                    <h1 className="text-white font-semibold text-sm truncate">
                       {group.name}
                     </h1>
                   </div>
 
                   {/* Member count */}
-                  <div className="flex items-center space-x-2">
-                    <p className="text-gray-300 text-xs leading-tight truncate max-w-[140px]">
+                  <div>
+                    <p className="text-gray-300 text-xs truncate">
                       {group.members.length} members
                     </p>
                   </div>
                 </div>
               </div>
             ))}
+            </div>
           </div>
 
           {/* Middle column - Chat or welcome message */}
@@ -186,6 +189,7 @@ function Dashboard() {
                 sendigToUsersId={selectedUserId}
                 userid={userId}
                 showChatbot={showchatbot}
+                otherUserName={users.find(u => u._id === selectedUserId)?.name || 'User'}
               />
             ) : selectedGroupId ? (
               <GroupChatWindow
@@ -193,6 +197,8 @@ function Dashboard() {
                 userid={userId}
                 groupName={groups.find(g => g._id === selectedGroupId)?.name || 'Group Chat'}
                 memberCount={groups.find(g => g._id === selectedGroupId)?.members.length || 0}
+                groupCreatorId={groups.find(g => g._id === selectedGroupId)?.createdBy || null}
+                groupMembers = {groups.find(g=>g._id === selectedGroupId)?.members || []}
                 showChatbot={showchatbot}
               />
             ) : (
