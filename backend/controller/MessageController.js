@@ -46,17 +46,18 @@ const getMessages = async (req, res) => {
 
 const sendMessage = async (req, res) => {
     try {
-        const {text,image} = req.body;
+        const {text} = req.body;
         const {id:receiverId} = req.params;
         const senderId = req.user.userId;
 
-        if(!text&&!image){
+        if(!text && !req.file){
             return res.status(400).json({error:"Message is empty"})
         }
         let imageUrl;
-        if(image){
-            // upload the base64 image to cloudinary
-            const uploadResponse = await cloudinary.uploader.upload(image);
+        if(req.file){
+            const b64 = Buffer.from(req.file.buffer).toString('base64');
+            const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+            const uploadResponse = await cloudinary.uploader.upload(dataURI);
             imageUrl = uploadResponse.secure_url;
         }
 

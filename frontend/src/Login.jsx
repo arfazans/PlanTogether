@@ -495,68 +495,89 @@ const StyledWrapper = styled.div`
 `;
 
 const OuterContainer = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
-
   display: flex;
   justify-content: center;
   align-items: center;
   background: #232946;
   padding: 2rem;
   box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.5rem;
+  }
 `;
 const InnerContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 3rem;
+  align-items: center;
+  gap: 2rem;
   border-radius: 12px;
-  // box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   box-shadow:#A0AEC0;
   padding: 2rem;
   width: 100%;
   max-width: 1200px;
-
   height: 100%;
-  max-height: calc(100vh - 4rem); /* leave padding space from OuterContainer */
+  max-height: calc(100vh - 4rem);
   box-sizing: border-box;
+  background:#FFF9F3;
 
-  /* Let children shrink to prevent overflow */
-  & > div {
-    flex-shrink: 1;
-    overflow: hidden;
+  @media (max-width: 1024px) and (min-width: 769px) {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    max-height: none;
+    height: auto;
+    min-height: 100vh;
   }
 
-  /* Tailwind gradient equivalent, to top right from neutral-200 to neutral-600 */
-  // background: linear-gradient(
-  //   to top right,
-  //   #e5e5e5,
-  //   /* roughly gray-200 */ #4a4a4a /* roughly gray-600 */
-  // );
-  background:#FFF9F3;.
-
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem;
+    max-height: none;
+    height: auto;
+    min-height: 100vh;
+    align-items: stretch;
+  }
 `;
 const LoginWrapper = styled.div`
-  flex: 1 1 45%; /* allow shrinking but try to remain 45% width */
-  min-width: 300px; /* minimal width */
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  min-height: 500px;
+
+  @media (max-width: 1024px) and (min-width: 769px) {
+    order: 2;
+    min-height: auto;
+    padding: 1rem 0;
+  }
+
+  @media (max-width: 768px) {
+    order: 2;
+    min-height: auto;
+    padding: 1rem 0;
+  }
 `;
 const ImageWrapper = styled.div`
-  flex: 1 1 55%; /* allow shrinking but try to remain 55% width */
-  min-width: 700px;
-  flex-direction: column;
-  max-width: 800px;
+  flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  // border:2px solid black;
+  min-height: 500px;
   border-radius: 2rem;
   box-shadow: 10px 10px 10px 5px rgba(0, 0, 0, 0.3);
-  // background: linear-gradient(to top right, #e2e2e2, #8e8e8e);
   background: #232946;
+  padding: 2rem;
+  
   h1 {
     text-shadow: 0px 10px 10px rgba(0, 0, 0, 0.5);
   }
@@ -565,33 +586,95 @@ const ImageWrapper = styled.div`
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
   }
 
-img {
-  margin-top: 2rem;
-  max-width: 100%;
-  max-height: 400px;
-  object-fit: contain;
-  box-shadow: 10px 10px 10px 5px rgba(0, 0, 0, 0.3);
-  border-radius: 2rem;
-  animation: floatImage 3s ease-in-out infinite;
-  display: block;
-  &:hover {
-    animation-play-state: paused;
+  img {
+    margin-top: 2rem;
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    box-shadow: 10px 10px 10px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 2rem;
+    animation: floatImage 3s ease-in-out infinite;
+    display: block;
+    &:hover {
+      animation-play-state: paused;
+    }
   }
-}
 
+  @media (max-width: 1024px) and (min-width: 769px) {
+    order: 1;
+    min-height: auto;
+    padding: 1.5rem;
+    
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.3rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    
+    img {
+      margin-top: 1rem;
+      max-height: 300px;
+    }
+  }
 
-@keyframes floatImage {
-  0% {
-    transform: translateY(0);  // Only Y axis
+  @media (max-width: 768px) {
+    order: 1;
+    flex: none;
+    min-width: 100%;
+    height: auto;
+    padding: 1rem;
+    
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    
+    img {
+      margin-top: 1rem;
+      max-height: 250px;
+    }
   }
-  50% {
-    transform: translateY(-20px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
 
+  @media (max-width: 480px) {
+    padding: 0.5rem;
+    
+    h1 {
+      font-size: 1.5rem;
+    }
+    
+    h3 {
+      font-size: 1rem;
+    }
+    
+    img {
+      max-height: 200px;
+    }
+  }
+
+  @keyframes floatImage {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
 `;
 
 export default Login;

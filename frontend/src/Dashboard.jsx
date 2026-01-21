@@ -7,6 +7,7 @@ import GroupChatWindow from "./GroupChatWindow";
 import aman from "./assets/aman.jpg";
 import axios from "axios";
 import { NoteContext } from "./ContextApi/CreateContext";
+import Posts from "./Posts";
 
 function Dashboard() {
   const URL = "http://localhost:9860";
@@ -203,13 +204,14 @@ function Dashboard() {
               />
             ) : (
               <div className="h-full flex items-center justify-center flex-col">
-                <h2 className="text-2xl ">
+                {/* <h2 className="text-2xl ">
                   Welcome To the chatNation || Where The talkative individuals
                   shine
                 </h2>
                 <p className="text-amber-50 ">
                   Begin Your Chat With your friends or groups
-                </p>
+                </p> */}
+                <Posts/>
               </div>
             )}
           </div>

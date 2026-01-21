@@ -14,6 +14,7 @@ const CredentialRoute = require("./routes/CredentialRoute");
 const MessageRoute = require("./routes/MessageRoute");
 const GroupRoute = require("./routes/GroupRoute");
 const PlanRoute = require("./routes/PlanRoute");
+const PostRoute = require("./routes/PostRoute");
 const AuthToken = require("./middleware/tokenAuth");
 const Message = require("./model/MessageModel");
 const onlineUsers = new Set();
@@ -37,6 +38,7 @@ server.use(
   })
 );
 server.use(express.json());
+server.use(express.urlencoded({ limit: '50mb', extended: true }));
 server.use(cookieParser());
 // server.use(morgan("dev"));
 
@@ -48,6 +50,7 @@ server.use("/user", CredentialRoute);
 server.use("/message", AuthToken, MessageRoute);
 server.use("/group", AuthToken, GroupRoute);
 server.use("/plan", AuthToken, PlanRoute);
+server.use("/post", AuthToken, PostRoute);
 
 io.on("connection", (socket) => {
   console.log("🟢 Socket connected:", socket.id);
