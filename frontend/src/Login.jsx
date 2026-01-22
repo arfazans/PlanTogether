@@ -180,8 +180,8 @@ function Login() {
         </LoginWrapper>
 
         <ImageWrapper>
-          <h1 className="text-5xl text-blue-100 mb-2 font-extrabold text-nowrap">
-            Welcome To chatNation!!
+          <h1 className="text-5xl text-blue-100 mb-2 font-extrabold">
+            Welcome To PlanTogether!!
           </h1>
           <h3 className="text-2xl text-blue-500 font-bold">
             Your DigiTal World
@@ -194,9 +194,10 @@ function Login() {
 }
 
 const StyledWrapper = styled.div`
-  width: 420px; /* or any desired px/em/rem/% value */
-  max-width: 94vw; /* for responsiveness on small screens */
-  margin: 0 auto; /* center horizontally */
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  box-sizing: border-box;
   .wrapper {
     --input-focus: #2d8cf0;
     --font-color: #323232;
@@ -468,8 +469,11 @@ const StyledWrapper = styled.div`
 
   /* Responsive */
   @media (max-width: 480px) {
+    width: 100%;
+    padding: 0 0.5rem;
+
     .flip-card__inner {
-      max-width: 96vw;
+      max-width: 100%;
       min-width: 0;
       height: 260px;
     }
@@ -482,7 +486,8 @@ const StyledWrapper = styled.div`
       font-size: 16px;
     }
     .flip-card__input {
-      max-width: 98vw;
+      width: 90%;
+      max-width: none;
       font-size: 13px;
       height: 30px;
     }
@@ -496,13 +501,14 @@ const StyledWrapper = styled.div`
 
 const OuterContainer = styled.div`
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #232946;
   padding: 2rem;
   box-sizing: border-box;
+  overflow-x: hidden;
 
   @media (max-width: 768px) {
     padding: 1rem;
@@ -522,7 +528,7 @@ const InnerContainer = styled.div`
   box-shadow:#A0AEC0;
   padding: 2rem;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1300px;
   height: 100%;
   max-height: calc(100vh - 4rem);
   box-sizing: border-box;
@@ -567,7 +573,7 @@ const LoginWrapper = styled.div`
   }
 `;
 const ImageWrapper = styled.div`
-  flex: 1;
+  
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -577,7 +583,7 @@ const ImageWrapper = styled.div`
   box-shadow: 10px 10px 10px 5px rgba(0, 0, 0, 0.3);
   background: #232946;
   padding: 2rem;
-  
+
   h1 {
     text-shadow: 0px 10px 10px rgba(0, 0, 0, 0.5);
   }
@@ -604,19 +610,19 @@ const ImageWrapper = styled.div`
     order: 1;
     min-height: auto;
     padding: 1.5rem;
-    
+
     h1 {
       font-size: 2.5rem;
       text-align: center;
       margin-bottom: 0.5rem;
     }
-    
+
     h3 {
       font-size: 1.3rem;
       text-align: center;
       margin-bottom: 1rem;
     }
-    
+
     img {
       margin-top: 1rem;
       max-height: 300px;
@@ -626,22 +632,24 @@ const ImageWrapper = styled.div`
   @media (max-width: 768px) {
     order: 1;
     flex: none;
-    min-width: 100%;
+    width: 100%;
     height: auto;
     padding: 1rem;
-    
+
     h1 {
       font-size: 2rem;
       text-align: center;
       margin-bottom: 0.5rem;
+      word-wrap: break-word;
+      hyphens: auto;
     }
-    
+
     h3 {
       font-size: 1.2rem;
       text-align: center;
       margin-bottom: 1rem;
     }
-    
+
     img {
       margin-top: 1rem;
       max-height: 250px;
@@ -650,15 +658,17 @@ const ImageWrapper = styled.div`
 
   @media (max-width: 480px) {
     padding: 0.5rem;
-    
+
     h1 {
       font-size: 1.5rem;
+      word-wrap: break-word;
+      hyphens: auto;
     }
-    
+
     h3 {
       font-size: 1rem;
     }
-    
+
     img {
       max-height: 200px;
     }

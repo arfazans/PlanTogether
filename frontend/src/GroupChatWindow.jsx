@@ -548,12 +548,12 @@ const GroupChatWindow = ({
         {planError && (
           <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
             <div className="flex items-center justify-between">
-              <span className="text-red-700 text-xs">❌ {planError}</span>
+              <span className="text-red-700 text-xs">Error: {planError}</span>
               <button
                 onClick={() => setPlanError(null)}
                 className="text-red-500 hover:text-red-700"
               >
-                ✕
+                X
               </button>
             </div>
           </div>
@@ -564,7 +564,7 @@ const GroupChatWindow = ({
             {showCreateForm ? (
               <div>
                 <h4 className="font-medium text-blue-900 text-sm mb-2">
-                  📅 Create New Plan
+                  Create New Plan
                 </h4>
                 <EditPlanForm
                   plan={{
@@ -581,7 +581,7 @@ const GroupChatWindow = ({
               <div>
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium text-blue-900 text-sm">
-                    📅 {currentPlan.eventName || "Event Plan"}
+                    {currentPlan.eventName || "Event Plan"}
                   </h4>
                   <div className="flex items-center gap-2">
                     <button
@@ -599,13 +599,13 @@ const GroupChatWindow = ({
                           onClick={handleEditPlan}
                           className="text-blue-600 hover:text-blue-800 text-xs"
                         >
-                          ✏️
+                          Edit
                         </button>
                         <button
                           onClick={handleDeletePlan}
                           className="text-red-600 hover:text-red-800 text-xs"
                         >
-                          🗑️
+                          Delete
                         </button>
                       </div>
                     )}
@@ -623,19 +623,19 @@ const GroupChatWindow = ({
                   <div className="mt-1 text-xs text-blue-700 space-y-1">
                     {currentPlan.dateTime && (
                       <div>
-                        🕒 {formatDate(currentPlan.dateTime)}
+                        Time: {formatDate(currentPlan.dateTime)}
                       </div>
                     )}
                     {currentPlan.location && (
-                      <div>📍 {currentPlan.location}</div>
+                      <div>Location: {currentPlan.location}</div>
                     )}
-                    {currentPlan.budget && <div>💰 ₹{currentPlan.budget}</div>}
+                    {currentPlan.budget && <div>Budget: ₹{currentPlan.budget}</div>}
                     
                     {/* Attendees section - always show */}
                     <div className="mt-2">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-green-600 font-medium">
-                          👥 Attendees ({currentPlan.attendees?.length || 0}):
+                          Attendees ({currentPlan.attendees?.length || 0}):
                         </span>
                         {currentPlan?.pollMessageId && (
                           <button
@@ -670,7 +670,7 @@ const GroupChatWindow = ({
                       !currentPlan.location ||
                       !currentPlan.budget) && (
                       <div className="text-yellow-600 text-xs mt-1">
-                        ⚠️ Some details missing - click Edit Plan to complete
+                        Some details missing - click Edit Plan to complete
                       </div>
                     )}
                   </div>
