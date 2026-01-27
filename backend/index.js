@@ -53,7 +53,7 @@ server.use("/plan", AuthToken, PlanRoute);
 server.use("/post", AuthToken, PostRoute);
 
 io.on("connection", (socket) => {
-  console.log("Socket connected:", socket.id);
+  console.log("🟢 Socket connected:", socket.id);
 
   // Log current online users and userSockets map
   console.log(`Current onlineUsers: ${Array.from(onlineUsers).join(", ")}`);
@@ -62,7 +62,7 @@ io.on("connection", (socket) => {
   // Send initial online users to this new socket
   socket.emit("online-user", Array.from(onlineUsers));
 
-  // When user comes online
+  // 🧩 When user comes online
   socket.on("user-online", (userId) => {
     userId = String(userId); // normalize to string
     onlineUsers.add(userId);
@@ -94,13 +94,13 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Handle messages (no DB save here)
+  // 🧩 Handle messages (no DB save here)
   socket.on("message", (data) => {
-    console.log("New message:", data);
+    console.log("📩 New message:", data);
 
     const receiverSocketId = userSockets.get(data.receiverId);
 
-    // Send to receiver (if online)
+    // ✅ Send to receiver (if online)
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("message", data);
       console.log(`Message sent to receiver: ${data.receiverId}`);
@@ -143,7 +143,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  // GROUP SOCKET EVENTS
+  // 🔹 GROUP SOCKET EVENTS
 
   // Join group room
   socket.on("join-group", (groupId) => {
@@ -159,7 +159,7 @@ io.on("connection", (socket) => {
 
   // Handle group messages
   socket.on("group-message", (data) => {
-    console.log("New group message:", data);
+    console.log("📩 New group message:", data);
     // Broadcast to all users in the group room (including sender)
     io.to(data.groupId).emit("group-message", data);
   });
@@ -188,7 +188,7 @@ io.on("connection", (socket) => {
     io.to(groupId).emit("plan-deleted", { groupId, planId, pollMessageId });
   });
 
-  // Handle user logout
+  // 🧩 Handle user logout
   socket.on("user-logout", (userId) => {
     onlineUsers.delete(userId);
     userSockets.delete(userId);
@@ -196,7 +196,7 @@ io.on("connection", (socket) => {
     console.log(`${userId} logged out`);
   });
 
-  // Handle disconnect
+  // 🧩 Handle disconnect
   socket.on("disconnect", () => {
     const userId = [...userSockets.entries()].find(
       ([uid, sId]) => sId === socket.id
@@ -208,7 +208,7 @@ io.on("connection", (socket) => {
       io.emit("online-user", Array.from(onlineUsers));
     }
 
-    console.log("Socket disconnected:", socket.id);
+    console.log("🔴 Socket disconnected:", socket.id);
   });
 });
 

@@ -6,13 +6,8 @@ const postSchema = new mongoose.Schema({
   groupName: { type: String, default: "" },
   image: { type: String, required: true },
   caption: { type: String, default: "" },
-  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Credential" }],
-  comments: [{
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "Credential", required: true },
-    userName: { type: String, required: true },
-    text: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now }
-  }]
+  likes: { type: Number, default: 0 },
+  comments: { type: Number, default: 0 }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Post", postSchema);

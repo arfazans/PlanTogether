@@ -56,20 +56,20 @@ const createPlanManually = async (req, res) => {
       senderId: userId,
       groupId,
       messageType: "poll",
-      text: `Plan Poll: ${plan.eventName}`,
+      text: `📊 Plan Poll: ${plan.eventName}`,
       pollData: {
         planId: plan._id,
         question: `Who's joining "${plan.eventName}"?`,
         options: [
-          { text: "I'm in!", votes: [] },
-          { text: "Can't make it", votes: [] },
+          { text: "I'm in! 👍", votes: [] },
+          { text: "Can't make it 👎", votes: [] },
         ],
       },
     });
     await pollMessage.save();
     await pollMessage.populate("senderId", "name");
     console.log("Poll message created:", pollMessage._id);
-    // link current plan to this poll
+    // 🔹 link current plan to this poll
     plan.pollMessageId = pollMessage._id;
     await plan.save();
 
@@ -154,13 +154,13 @@ const updatePlan = async (req, res) => {
       senderId: userId,
       groupId: plan.groupId._id,
       messageType: "poll",
-      text: `Plan Poll: ${plan.eventName}`,
+      text: `📊 Plan Poll: ${plan.eventName}`,
       pollData: {
         planId: plan._id,
         question: `Who's joining "${plan.eventName}"?`,
         options: [
-          { text: "I'm in!", votes: [] },
-          { text: "Can't make it", votes: [] },
+          { text: "I'm in! 👍", votes: [] },
+          { text: "Can't make it 👎", votes: [] },
         ],
       },
     });

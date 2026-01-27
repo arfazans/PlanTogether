@@ -45,7 +45,7 @@ const PollMessage = ({ message, userid, onVoteUpdate }) => {
       {/* Poll Header */}
       <div className="flex items-center gap-2 mb-3">
         <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-          <span className="text-white text-sm">Poll</span>
+          <span className="text-white text-sm">📊</span>
         </div>
         <div>
           <h4 className="font-semibold text-blue-900 text-sm">Plan Poll</h4>

@@ -209,38 +209,38 @@ function GroupsFunctionality() {
       <Navbar />
 
       <main className="relative z-10 h-screen overflow-hidden">
-        <div className='h-full w-full flex items-center justify-center pt-14 px-2 md:px-0'>
-          <div className="max-w-[85rem] w-full px-2 sm:px-4 lg:px-8 mx-auto h-fit">
+        <div className='h-full w-full flex items-center justify-center pt-14'>
+          <div className="max-w-[85rem] w-full px-4 sm:px-6 lg:px-8 mx-auto h-fit">
             <div className="flex flex-col">
               <div className="-m-1.5 overflow-x-auto">
                 <div className="p-1.5 min-w-full inline-block align-middle">
-                  <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl shadow-2xs overflow-hidden dark:bg-neutral-900/90 dark:border-neutral-700 max-h-[70vh] md:max-h-[75vh] flex flex-col">
+                  <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl shadow-2xs overflow-hidden dark:bg-neutral-900/90 dark:border-neutral-700 max-h-[70vh] flex flex-col">
 
                     {/* Header */}
-                    <div className="px-3 md:px-6 py-3 md:py-4 border-b border-gray-200 dark:border-neutral-700">
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                    <div className="px-6 py-4 border-b border-gray-200 dark:border-neutral-700">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
                           <div>
-                            <h2 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-neutral-200">
+                            <h2 className="text-xl font-semibold text-gray-800 dark:text-neutral-200">
                               Groups
                             </h2>
-                            <p className="text-xs md:text-sm text-gray-600 dark:text-neutral-400">
+                            <p className="text-sm text-gray-600 dark:text-neutral-400">
                               Create groups, chat together, and make plans happen.
                             </p>
                           </div>
 
                           {/* Search Section */}
-                          <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
+                          <div className="flex gap-2 items-center">
                             <input
                               type="text"
                               placeholder="Search groups..."
                               value={searchTerm}
                               onChange={(e) => setSearchTerm(e.target.value)}
-                              className="w-full sm:w-40 md:w-48 px-2 md:px-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
+                              className="w-48 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
                             />
                             <button
                               onClick={handleSearch}
-                              className="px-2 md:px-3 py-2 bg-blue-600 text-white text-xs md:text-sm rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                               Search
                             </button>
@@ -251,11 +251,11 @@ function GroupsFunctionality() {
                               placeholder="Enter invite code..."
                               value={inviteCode}
                               onChange={(e) => setInviteCode(e.target.value)}
-                              className="w-full sm:w-32 md:w-40 px-2 md:px-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
+                              className="w-40 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
                             />
                             <button
                               onClick={handleJoinWithCode}
-                              className="px-2 md:px-3 py-2 bg-green-600 text-white text-xs md:text-sm rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                              className="px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                             >
                               Join
                             </button>
@@ -265,7 +265,7 @@ function GroupsFunctionality() {
                         <button
                           type="button"
                           onClick={() => setShowCreateModal(true)}
-                          className="py-2 px-3 md:px-4 inline-flex items-center gap-x-2 text-xs md:text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
+                          className="py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
                         >
                           Create Group
                         </button>
@@ -273,37 +273,37 @@ function GroupsFunctionality() {
                     </div>
 
                     {/* Table */}
-                    <div className="flex-1 overflow-x-auto overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400">
+                    <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400">
                       <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                       <thead className="bg-gray-50 dark:bg-neutral-800 sticky top-0 z-10">
                         <tr>
-                          <th scope="col" className="px-3 md:px-6 py-2 md:py-3 text-start">
+                          <th scope="col" className="px-6 py-3 text-start">
                             <span className="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
                               Group Name
                             </span>
                           </th>
-                          <th scope="col" className="px-3 md:px-6 py-2 md:py-3 text-start hidden sm:table-cell">
+                          <th scope="col" className="px-6 py-3 text-start">
                             <span className="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
                               Description
                             </span>
                           </th>
-                          <th scope="col" className="px-3 md:px-6 py-2 md:py-3 text-start hidden md:table-cell">
+                          <th scope="col" className="px-6 py-3 text-start">
                             <span className="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
                               Category
                             </span>
                           </th>
-                          <th scope="col" className="px-3 md:px-6 py-2 md:py-3 text-start hidden lg:table-cell">
+                          <th scope="col" className="px-6 py-3 text-start">
                             <span className="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
                               Active Plans
                             </span>
                           </th>
-                          <th scope="col" className="px-3 md:px-6 py-2 md:py-3 text-start">
+                          <th scope="col" className="px-6 py-3 text-start">
                             <span className="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
                               Members
                             </span>
                           </th>
-                          <th scope="col" className="px-3 md:px-6 py-2 md:py-3 text-end">
-                            <span className="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
+                          <th scope="col" className="px-6 py-3 text-end">
+                            <span className="text-xs  font-semibold uppercase text-gray-800 dark:text-neutral-200">
                               Action
                             </span>
                           </th>
@@ -313,60 +313,60 @@ function GroupsFunctionality() {
                       <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
                         {loading ? (
                           <tr>
-                            <td colSpan="6" className="px-3 md:px-6 py-6 md:py-8 text-center text-gray-500 text-sm">
+                            <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
                               Loading groups...
                             </td>
                           </tr>
                         ) : filteredGroups.length === 0 ? (
                           <tr>
-                            <td colSpan="6" className="px-3 md:px-6 py-6 md:py-8 text-center text-gray-500 text-sm">
+                            <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
                               {searchTerm ? 'No groups found matching your search.' : 'No groups available.'}
                             </td>
                           </tr>
                         ) : (
                           filteredGroups.map((group) => (
                             <tr key={group._id} className="bg-white hover:bg-gray-50 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                              <td className="px-3 md:px-6 py-2">
-                                <div className="text-sm text-blue-600 decoration-2 hover:underline dark:text-blue-500 truncate">
+                              <td className="px-6 py-2">
+                                <div className="text-sm text-blue-600 decoration-2 hover:underline dark:text-blue-500">
                                   {group.name}
                                 </div>
                               </td>
-                              <td className="px-3 md:px-6 py-2 hidden sm:table-cell">
-                                <p className="text-sm text-gray-500 dark:text-neutral-500 truncate max-w-xs">
+                              <td className="px-6 py-2">
+                                <p className="text-sm text-gray-500 dark:text-neutral-500">
                                   {group.description || 'No description'}
                                 </p>
                               </td>
-                              <td className="px-3 md:px-6 py-2 hidden md:table-cell">
+                              <td className="px-6 py-2">
                                 <span className="inline-flex items-center gap-1.5 py-1 px-2 rounded-lg text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                                   General
                                 </span>
                               </td>
-                              <td className="px-3 md:px-6 py-2 hidden lg:table-cell">
+                              <td className="px-6 py-2">
                                 <span className="inline-flex items-center gap-1.5 py-1 px-2 rounded-lg text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                   Active
                                 </span>
                               </td>
-                              <td className="px-3 md:px-6 py-2">
-                                <div className="flex -space-x-1 md:-space-x-2">
+                              <td className="px-6 py-2">
+                                <div className="flex -space-x-2">
                                   {group.members.slice(0, 3).map((member, index) => (
-                                    <div key={index} className="inline-block size-5 md:size-6 rounded-full bg-gray-600 ring-1 md:ring-2 ring-white dark:ring-neutral-900"></div>
+                                    <div key={index} className="inline-block size-6 rounded-full bg-gray-600 ring-2 ring-white dark:ring-neutral-900"></div>
                                   ))}
                                   {group.members.length > 3 && (
-                                    <div className="inline-flex justify-center items-center size-5 md:size-6 bg-gray-100 text-xs rounded-full ring-1 md:ring-2 ring-white dark:bg-neutral-500 dark:text-white dark:ring-neutral-900">
-                                      <span className="font-medium text-xs">{group.members.length - 3}+</span>
+                                    <div className="inline-flex justify-center items-center size-6 bg-gray-100 text-xs rounded-full ring-2 ring-white dark:bg-neutral-500 dark:text-white dark:ring-neutral-900">
+                                      <span className="font-medium">{group.members.length - 3}+</span>
                                     </div>
                                   )}
                                 </div>
                               </td>
-                              <td className="px-3 md:px-6 py-2 text-end">
+                              <td className="px-6 py-2 text-end">
                                 {isUserMember(group._id) ? (
-                                  <span className="text-green-600 font-medium text-xs md:text-sm">
+                                  <span className="text-green-600 font-medium text-sm">
                                     You're in
                                   </span>
                                 ) : (
                                   <button
                                     onClick={() => handleJoinGroup(group._id)}
-                                    className="text-blue-600 hover:text-blue-800 font-medium text-xs md:text-sm"
+                                    className="text-blue-600 hover:text-blue-800 font-medium"
                                   >
                                     Join
                                   </button>
@@ -380,11 +380,12 @@ function GroupsFunctionality() {
                     </div>
 
                     {/* Footer */}
-                    <div className="px-3 md:px-6 py-3 md:py-4 border-t border-gray-200 dark:border-neutral-700 flex-shrink-0">
+                    <div className="px-6 py-4 border-t border-gray-200 dark:border-neutral-700 flex-shrink-0">
                       <div className="flex justify-between items-center">
-                        <p className="text-xs md:text-sm text-gray-600 dark:text-neutral-400">
+                        <p className="text-sm text-gray-600 dark:text-neutral-400">
                           <span className="font-semibold text-gray-800 dark:text-neutral-200">{filteredGroups.length}</span> groups
                         </p>
+
                       </div>
                     </div>
 
@@ -398,8 +399,8 @@ function GroupsFunctionality() {
 
       {/* Create Group Popup */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-4 md:p-6 w-full max-w-md shadow-lg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
             <h3 className="text-lg font-semibold mb-4">Create New Group</h3>
 
             <input
@@ -407,7 +408,7 @@ function GroupsFunctionality() {
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}
               placeholder="Group name..."
-              className="w-full px-3 py-2 mb-3 border rounded-lg text-sm"
+              className="w-full px-3 py-2 mb-3 border rounded-lg"
             />
 
             <textarea
@@ -415,7 +416,7 @@ function GroupsFunctionality() {
               onChange={(e) => setGroupDescription(e.target.value)}
               placeholder="Description (optional)..."
               rows={3}
-              className="w-full px-3 py-2 mb-4 border rounded-lg resize-none text-sm"
+              className="w-full px-3 py-2 mb-4 border rounded-lg resize-none"
             />
 
             <div className="flex gap-3">
@@ -425,13 +426,13 @@ function GroupsFunctionality() {
                   setGroupName('');
                   setGroupDescription('');
                 }}
-                className="flex-1 px-3 md:px-4 py-2 border hover:bg-gray-200 rounded-lg cursor-pointer text-sm"
+                className="flex-1 px-4 py-2 border hover:bg-gray-200 rounded-lg cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreateGroup}
-                className="flex-1 px-3 md:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer text-sm"
+                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
               >
                 Create
               </button>
