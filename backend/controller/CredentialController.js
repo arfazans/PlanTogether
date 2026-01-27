@@ -1,5 +1,6 @@
 const CredentialModel = require("../model/CredentialModel");
 const generateTokenAndSetCookie = require("../services/tokenServices");
+const cloudinary = require('../config/cloudinary');
 
 const signup = async (req, res) => {
   try {
@@ -89,15 +90,51 @@ const logout = async (req, res) => {
 
 
 const updateProfile = async(req,res)=>{
+  try {
+    const { name } = req.body;
+    const userId = req.user.userId;
 
+    const updateData = {};
+    if (name) updateData.name = name;
+
+    if (req.file) {
+      // Upload image to cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'PlanTogether/profileImage',
+        transformation: [
+          { width: 400, height: 400, crop: 'fill' }
+        ]
+      });
+      updateData.profileImage = result.secure_url;
+    }
+
+    const updatedUser = await CredentialModel.findByIdAndUpdate(
+      userId,
+      updateData,
+      { new: true, select: '-password' }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.json({ success: true, message: "Profile updated successfully", user: updatedUser });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, message: "Failed to update profile" });
+  }
 }
 
-const checkAuth = (req,res)=>{
+const checkAuth = async (req,res)=>{
   try {
-    res.status(200).json(req.user);
+    const user = await CredentialModel.findById(req.user.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
   } catch (err) {
-console.log("Error in checkAuth controller", err.message);
-res.status(500).json({message:"Internal Server Error"})
+    console.log("Error in checkAuth controller", err.message);
+    res.status(500).json({message:"Internal Server Error"})
   }
 }
 

@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
+const path = require("path");
 const { ConnectDB } = require("./config/dbConnect");
 
 const socketIO = require("socket.io");
@@ -14,6 +15,7 @@ const CredentialRoute = require("./routes/CredentialRoute");
 const MessageRoute = require("./routes/MessageRoute");
 const GroupRoute = require("./routes/GroupRoute");
 const PlanRoute = require("./routes/PlanRoute");
+const PostRoute = require("./routes/PostRoute");
 const AuthToken = require("./middleware/tokenAuth");
 const Message = require("./model/MessageModel");
 const onlineUsers = new Set();
@@ -38,6 +40,7 @@ server.use(
 );
 server.use(express.json());
 server.use(cookieParser());
+server.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // server.use(morgan("dev"));
 
 // DB Connect
@@ -48,6 +51,7 @@ server.use("/user", CredentialRoute);
 server.use("/message", AuthToken, MessageRoute);
 server.use("/group", AuthToken, GroupRoute);
 server.use("/plan", AuthToken, PlanRoute);
+server.use("/post", AuthToken, PostRoute);
 
 io.on("connection", (socket) => {
   console.log("🟢 Socket connected:", socket.id);

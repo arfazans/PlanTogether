@@ -178,7 +178,7 @@ function GroupsFunctionality() {
   }, [backgroundImages.length]);
 
   return (
-    <div className="h-screen w-full relative overflow-y-hidden">
+    <div className="h-screen w-full relative overflow-x-hidden overflow-y-hidden">
       <style jsx>{`
         .scrollbar-thin::-webkit-scrollbar {
           width: 6px;
@@ -207,101 +207,102 @@ function GroupsFunctionality() {
       <Navbar />
 
       <main className="relative z-10 h-screen overflow-hidden">
-        <div className='h-full w-full flex items-center justify-center pt-14'>
-          <div className="max-w-[85rem] w-full px-4 sm:px-6 lg:px-8 mx-auto h-fit">
+        <div className='h-full w-full flex items-center justify-center pt-14 px-4'>
+          <div className="max-w-[85rem] w-full px-2 sm:px-4 lg:px-6 mx-auto h-fit">
             <div className="flex flex-col">
               <div className="-m-1.5 overflow-x-auto">
                 <div className="p-1.5 min-w-full inline-block align-middle">
                   <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl shadow-2xs overflow-hidden dark:bg-neutral-900/90 dark:border-neutral-700 max-h-[70vh] flex flex-col">
 
                     {/* Header */}
-                    <div className="px-6 py-4 border-b border-gray-200 dark:border-neutral-700">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div>
-                            <h2 className="text-xl font-semibold text-gray-800 dark:text-neutral-200">
-                              Groups
-                            </h2>
-                            <p className="text-sm text-gray-600 dark:text-neutral-400">
-                              Create groups, chat together, and make plans happen.
-                            </p>
-                          </div>
+                    <div className="px-3 sm:px-6 py-4 border-b border-gray-200 dark:border-neutral-700">
+                      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <div className="flex-shrink-0">
+                          <h2 className="text-xl font-semibold text-gray-800 dark:text-neutral-200">
+                            Groups
+                          </h2>
+                          <p className="text-sm text-gray-600 dark:text-neutral-400">
+                            Create groups, chat together, and make plans happen.
+                          </p>
+                        </div>
 
-                          {/* Search Section */}
-                          <div className="flex gap-2 items-center">
+                        {/* Search and Actions Section */}
+                        <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
+                          <div className="flex flex-col sm:flex-row gap-2">
                             <input
                               type="text"
                               placeholder="Search groups..."
                               value={searchTerm}
                               onChange={(e) => setSearchTerm(e.target.value)}
-                              className="w-48 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
+                              className="w-full sm:w-40 lg:w-48 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
                             />
                             <button
                               onClick={handleSearch}
-                              className="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 whitespace-nowrap"
                             >
                               Search
                             </button>
+                          </div>
 
-                            {/* Invite Code Section */}
+                          <div className="flex flex-col sm:flex-row gap-2">
                             <input
                               type="text"
                               placeholder="Enter invite code..."
                               value={inviteCode}
                               onChange={(e) => setInviteCode(e.target.value)}
-                              className="w-40 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
+                              className="w-full sm:w-32 lg:w-40 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
                             />
                             <button
                               onClick={handleJoinWithCode}
-                              className="px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                              className="px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 whitespace-nowrap"
                             >
                               Join
                             </button>
                           </div>
-                        </div>
 
-                        <button
-                          type="button"
-                          onClick={() => setShowCreateModal(true)}
-                          className="py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700"
-                        >
-                          Create Group
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => setShowCreateModal(true)}
+                            className="py-2 px-4 inline-flex items-center justify-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 whitespace-nowrap"
+                          >
+                            Create Group
+                          </button>
+                        </div>
                       </div>
                     </div>
 
                     {/* Table */}
-                    <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400">
+                    <div className="flex-1 overflow-x-auto overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400">
                       <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                       <thead className="bg-gray-50 dark:bg-neutral-800 sticky top-0 z-10">
                         <tr>
-                          <th scope="col" className="px-6 py-3 text-start">
+                          <th scope="col" className="px-3 sm:px-6 py-3 text-start">
                             <span className="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
                               Group Name
                             </span>
                           </th>
-                          <th scope="col" className="px-6 py-3 text-start">
+                          <th scope="col" className="px-3 sm:px-6 py-3 text-start hidden sm:table-cell">
                             <span className="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
                               Description
                             </span>
                           </th>
-                          <th scope="col" className="px-6 py-3 text-start">
+                          <th scope="col" className="px-3 sm:px-6 py-3 text-start hidden md:table-cell">
                             <span className="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
                               Category
                             </span>
                           </th>
-                          <th scope="col" className="px-6 py-3 text-start">
+                          <th scope="col" className="px-3 sm:px-6 py-3 text-start hidden lg:table-cell">
                             <span className="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
                               Active Plans
                             </span>
                           </th>
-                          <th scope="col" className="px-6 py-3 text-start">
+                          <th scope="col" className="px-3 sm:px-6 py-3 text-start">
                             <span className="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
                               Members
                             </span>
                           </th>
-                          <th scope="col" className="px-6 py-3 text-end">
-                            <span className="text-xs  font-semibold uppercase text-gray-800 dark:text-neutral-200">
+                          <th scope="col" className="px-3 sm:px-6 py-3 text-end">
+                            <span className="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
                               Action
                             </span>
                           </th>
@@ -324,27 +325,27 @@ function GroupsFunctionality() {
                         ) : (
                           filteredGroups.map((group) => (
                             <tr key={group._id} className="bg-white hover:bg-gray-50 dark:bg-neutral-900 dark:hover:bg-neutral-800">
-                              <td className="px-6 py-2">
-                                <div className="text-sm text-blue-600 decoration-2 hover:underline dark:text-blue-500">
+                              <td className="px-3 sm:px-6 py-2">
+                                <div className="text-sm text-blue-600 decoration-2 hover:underline dark:text-blue-500 truncate max-w-[150px]">
                                   {group.name}
                                 </div>
                               </td>
-                              <td className="px-6 py-2">
-                                <p className="text-sm text-gray-500 dark:text-neutral-500">
+                              <td className="px-3 sm:px-6 py-2 hidden sm:table-cell">
+                                <p className="text-sm text-gray-500 dark:text-neutral-500 truncate max-w-[200px]">
                                   {group.description || 'No description'}
                                 </p>
                               </td>
-                              <td className="px-6 py-2">
+                              <td className="px-3 sm:px-6 py-2 hidden md:table-cell">
                                 <span className="inline-flex items-center gap-1.5 py-1 px-2 rounded-lg text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                                   General
                                 </span>
                               </td>
-                              <td className="px-6 py-2">
+                              <td className="px-3 sm:px-6 py-2 hidden lg:table-cell">
                                 <span className="inline-flex items-center gap-1.5 py-1 px-2 rounded-lg text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                   Active
                                 </span>
                               </td>
-                              <td className="px-6 py-2">
+                              <td className="px-3 sm:px-6 py-2">
                                 <div className="flex -space-x-2">
                                   {group.members.slice(0, 3).map((member, index) => (
                                     <div key={index} className="inline-block size-6 rounded-full bg-gray-600 ring-2 ring-white dark:ring-neutral-900"></div>
@@ -356,15 +357,15 @@ function GroupsFunctionality() {
                                   )}
                                 </div>
                               </td>
-                              <td className="px-6 py-2 text-end">
+                              <td className="px-3 sm:px-6 py-2 text-end">
                                 {isUserMember(group._id) ? (
-                                  <span className="text-green-600 font-medium text-sm">
+                                  <span className="text-green-600 font-medium text-sm whitespace-nowrap">
                                     You're in
                                   </span>
                                 ) : (
                                   <button
                                     onClick={() => handleJoinGroup(group._id)}
-                                    className="text-blue-600 hover:text-blue-800 font-medium"
+                                    className="text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap"
                                   >
                                     Join
                                   </button>
@@ -378,12 +379,11 @@ function GroupsFunctionality() {
                     </div>
 
                     {/* Footer */}
-                    <div className="px-6 py-4 border-t border-gray-200 dark:border-neutral-700 flex-shrink-0">
+                    <div className="px-3 sm:px-6 py-4 border-t border-gray-200 dark:border-neutral-700 flex-shrink-0">
                       <div className="flex justify-between items-center">
                         <p className="text-sm text-gray-600 dark:text-neutral-400">
                           <span className="font-semibold text-gray-800 dark:text-neutral-200">{filteredGroups.length}</span> groups
                         </p>
-
                       </div>
                     </div>
 
@@ -397,8 +397,8 @@ function GroupsFunctionality() {
 
       {/* Create Group Popup */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
             <h3 className="text-lg font-semibold mb-4">Create New Group</h3>
 
             <input

@@ -180,10 +180,10 @@ function Login() {
         </LoginWrapper>
 
         <ImageWrapper>
-          <h1 className="text-5xl text-blue-100 mb-2 font-extrabold text-nowrap">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl text-blue-100 mb-2 font-extrabold text-center leading-tight">
             Welcome To chatNation!!
           </h1>
-          <h3 className="text-2xl text-blue-500 font-bold">
+          <h3 className="text-lg md:text-xl lg:text-2xl text-blue-500 font-bold text-center">
             Your DigiTal World
           </h3>
           <img src={loginImage} alt="Login visual" />
@@ -497,101 +497,151 @@ const StyledWrapper = styled.div`
 const OuterContainer = styled.div`
   height: 100vh;
   width: 100vw;
-
+  overflow-x: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #232946;
-  padding: 2rem;
+  padding: 1rem;
   box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 const InnerContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 3rem;
+  gap: 2rem;
   border-radius: 12px;
-  // box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  box-shadow:#A0AEC0;
-  padding: 2rem;
+  box-shadow: #A0AEC0;
+  padding: 1.5rem;
   width: 100%;
   max-width: 1200px;
-
   height: 100%;
-  max-height: calc(100vh - 4rem); /* leave padding space from OuterContainer */
+  max-height: calc(100vh - 2rem);
   box-sizing: border-box;
+  background: #FFF9F3;
 
-  /* Let children shrink to prevent overflow */
   & > div {
     flex-shrink: 1;
     overflow: hidden;
   }
 
-  /* Tailwind gradient equivalent, to top right from neutral-200 to neutral-600 */
-  // background: linear-gradient(
-  //   to top right,
-  //   #e5e5e5,
-  //   /* roughly gray-200 */ #4a4a4a /* roughly gray-600 */
-  // );
-  background:#FFF9F3;.
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    max-height: calc(100vh - 1rem);
+  }
 
+  @media (max-width: 768px) {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
 `;
 const LoginWrapper = styled.div`
-  flex: 1 1 45%; /* allow shrinking but try to remain 45% width */
-  min-width: 300px; /* minimal width */
+  flex: 1 1 45%;
+  min-width: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
+
+  @media (max-width: 1024px) {
+    flex: 1;
+    min-width: 100%;
+    height: auto;
+  }
 `;
 const ImageWrapper = styled.div`
-  flex: 1 1 55%; /* allow shrinking but try to remain 55% width */
-  min-width: 700px;
+  flex: 1 1 55%;
+  min-width: 300px;
   flex-direction: column;
   max-width: 800px;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
-  // border:2px solid black;
   border-radius: 2rem;
   box-shadow: 10px 10px 10px 5px rgba(0, 0, 0, 0.3);
-  // background: linear-gradient(to top right, #e2e2e2, #8e8e8e);
   background: #232946;
+  padding: 1rem;
+  box-sizing: border-box;
+
   h1 {
     text-shadow: 0px 10px 10px rgba(0, 0, 0, 0.5);
+    font-size: 2.5rem;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.2;
   }
+  
   h3 {
     color: #8392ab;
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
   }
 
-img {
-  margin-top: 2rem;
-  max-width: 100%;
-  max-height: 400px;
-  object-fit: contain;
-  box-shadow: 10px 10px 10px 5px rgba(0, 0, 0, 0.3);
-  border-radius: 2rem;
-  animation: floatImage 3s ease-in-out infinite;
-  display: block;
-  &:hover {
-    animation-play-state: paused;
+  img {
+    margin-top: 1rem;
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    box-shadow: 10px 10px 10px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 2rem;
+    animation: floatImage 3s ease-in-out infinite;
+    display: block;
+    &:hover {
+      animation-play-state: paused;
+    }
   }
-}
 
+  @media (max-width: 1024px) {
+    flex: 1;
+    min-width: 100%;
+    height: auto;
+    padding: 0.75rem;
+    
+    h1 {
+      font-size: 2rem;
+    }
+    
+    h3 {
+      font-size: 1.25rem;
+    }
+    
+    img {
+      max-height: 200px;
+    }
+  }
 
-@keyframes floatImage {
-  0% {
-    transform: translateY(0);  // Only Y axis
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 1.75rem;
+    }
+    
+    h3 {
+      font-size: 1rem;
+    }
+    
+    img {
+      max-height: 150px;
+      margin-top: 0.5rem;
+    }
   }
-  50% {
-    transform: translateY(-20px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
 
+  @keyframes floatImage {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
 `;
 
 export default Login;
