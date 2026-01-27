@@ -1,65 +1,62 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 const Chatbot_Container = ({ onClose }) => {
   const url = "http://localhost:9860";
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // ← Track if bot is "typing"
+
   const [chatHistory, setChatHistory] = useState([
     { sender: "bot", text: "Hello! How can I assist you today?" },
   ]);
-  const chatDisplayRef = useRef(null);
-
-  // Auto-scroll to bottom when new messages are added
-  useEffect(() => {
-    if (chatDisplayRef.current) {
-      chatDisplayRef.current.scrollTop = chatDisplayRef.current.scrollHeight;
-    }
-  }, [chatHistory, loading]);
 
   const handleSubmitMessageToBot = async () => {
     if (!message.trim()) return;
 
+    // Add user's message to chat history
     setChatHistory((prev) => [...prev, { sender: "user", text: message }]);
-    setMessage("");
-    setLoading(true);
+    setMessage(""); // ← input clears right after send
+    setLoading(true); // ← start bot-typing
     try {
-      const res = await axios.post(`${url}/bot/botreply`, { message });
+      // POST message and user to backend botreply endpoint
+      const res = await axios.post(`${url}/bot/botreply`, { message: message });
+
+      // Add Bot Libre's reply to chat history
       setChatHistory((prev) => [
         ...prev,
         { sender: "bot", text: res.data.reply },
       ]);
     } catch (error) {
       console.log(error);
+      // Show error message from bot
       setChatHistory((prev) => [
         ...prev,
         { sender: "bot", text: "Sorry, something went wrong." },
       ]);
     }
-    setLoading(false);
+    setLoading(false); // ← stop bot-typing after response
   };
 
   return (
-    // outer card: give it a fixed / screen-based height
-    <div className="w-full max-w-sm h-[calc(100vh-7rem)] bg-[#232946] border-2 border-black rounded-t-2xl shadow-md overflow-hidden">
-      {/* column layout so middle grows and scrolls */}
-      <div className="flex flex-col h-full">
-        {/* top header */}
-        <div className="px-4 py-3 border-b-2 border-black">
+    <div className="max-w-md mx-auto h-full bg-transparent border-2 border-black rounded-t-2xl shadow-md rounded-lg overflow-hidden">
+      <div className="flex flex-col h-full pb-2.5">
+        <div className="px-4 py-3 border-b-2  border-black">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold font-serif text-zinc-800 dark:text-white">
+            <h2 className="text-lg font-semibold text-zinc-800 dark:text-white">
               Chatbot Assistant
             </h2>
             <div className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
               Online
             </div>
-            <button
+
+            {/* cross button */}
+            <div
               onClick={onClose}
-              className="cursor-pointer hover:bg-gray-200 rounded p-1"
+              className="cursor-pointer hover:bg-gray-400 rounded"
             >
               <svg
-                width="20"
-                height="20"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -67,18 +64,17 @@ const Chatbot_Container = ({ onClose }) => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>
-            </button>
+            </div>
           </div>
         </div>
 
-        {/* chat display – this is the ONLY scrolling area */}
+        {/* Chat display */}
         <div
-          ref={chatDisplayRef}
+          className="flex-1 p-3 overflow-y-auto flex flex-col space-y-2"
           id="chatDisplay"
-          className="flex-1 p-3 overflow-y-auto flex flex-col space-y-2 scrollbar-hide"
         >
           {chatHistory.map(({ sender, text }, index) => (
             <div
@@ -92,7 +88,7 @@ const Chatbot_Container = ({ onClose }) => {
               {text}
             </div>
           ))}
-
+          {/* Typing indicator at the end */}
           {loading && (
             <div className="self-start px-3 py-2 bg-gray-200 rounded-2xl max-w-max shadow flex items-center gap-1">
               <span className="block w-1.5 h-1.5 bg-gray-500 rounded-full animate-pulse" />
@@ -102,9 +98,9 @@ const Chatbot_Container = ({ onClose }) => {
           )}
         </div>
 
-        {/* message input stays fixed at bottom */}
-        <div className="px-3 border-t border-black">
-          <div className="flex gap-2 py-2">
+        {/* Message input */}
+        <div className="px-3 py-2 border-t border-black">
+          <div className="flex gap-2">
             <input
               placeholder="Type your message..."
               className="flex-1 p-2 border rounded-lg bg-black dark:text-white dark:border-zinc-600 text-sm"

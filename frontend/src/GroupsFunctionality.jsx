@@ -9,7 +9,6 @@ import bg9 from './assets/bg-9.png';
 import bg10 from './assets/bg-10.png';
 import bg11 from './assets/bg-11.png';
 import bg12 from './assets/bg-12.png';
-import Footer from './Footer';
 
 function GroupsFunctionality() {
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
@@ -179,7 +178,6 @@ function GroupsFunctionality() {
   }, [backgroundImages.length]);
 
   return (
-    <>
     <div className="h-screen w-full relative overflow-y-hidden">
       <style jsx>{`
         .scrollbar-thin::-webkit-scrollbar {
@@ -440,10 +438,7 @@ function GroupsFunctionality() {
           </div>
         </div>
       )}
-
     </div>
-      <Footer/>
-      </>
   )
 }
 
