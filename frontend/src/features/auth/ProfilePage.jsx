@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
-import './Profile.css'
-import Navbar from './Navbar'
-import { NoteContext } from './ContextApi/CreateContext'
+import './ProfilePage.css'
+import Navbar from '../../shared/components/layout/Navbar'
+import { NoteContext } from '../../ContextApi/CreateContext'
 import axios from 'axios'
 
-function Profile() {
+function ProfilePage() {
   const { userId } = useContext(NoteContext)
   const [user, setUser] = useState(null)
   const [posts, setPosts] = useState([])
@@ -575,4 +575,4 @@ function Profile() {
   )
 }
 
-export default Profile
+export default ProfilePage

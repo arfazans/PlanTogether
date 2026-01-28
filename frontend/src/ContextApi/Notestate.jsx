@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { connectWS } from "../socket";
+import { connectWebSocket } from "../shared/services/websocketService";
 import { NoteContext } from "./CreateContext";
 import axios from "axios";
 const NoteState = ({ children }) => {
@@ -84,7 +84,7 @@ const NoteState = ({ children }) => {
     }
 
     // Connect socket for logged-in user
-    socket.current = connectWS();
+    socket.current = connectWebSocket();
 
     // Event listener: send user-online after socket connects
     const onConnect = () => {

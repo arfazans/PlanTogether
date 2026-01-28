@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const PollMessage = ({ message, userid, onVoteUpdate }) => {
+const PollMessageComponent = ({ message, userid, onVoteUpdate }) => {
   const [voting, setVoting] = useState(false);
   
   const handleVote = async (optionIndex) => {
@@ -120,4 +120,4 @@ const PollMessage = ({ message, userid, onVoteUpdate }) => {
   );
 };
 
-export default PollMessage;
+export default PollMessageComponent;

@@ -1,13 +1,13 @@
 import axios from "axios";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
-import { NoteContext } from "./ContextApi/CreateContext";
-import Logo from "./assets/LogoBG.png";
+import { NoteContext } from "../../../ContextApi/CreateContext";
+import Logo from "../../../assets/LogoBG.png";
 import styled from "styled-components";
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
+import NavItem from "../ui/NavItem";
 
-function Navbar() {
+function Navbar({ showMobileMessages, setShowMobileMessages }) {
   const URL = "http://localhost:9860";
   const { socket, userId, setUserId } = useContext(NoteContext);
   const navigate = useNavigate();
@@ -106,35 +106,35 @@ function Navbar() {
         {/* Collapse */}
         <div
           id="hs-navbar-floating-dark"
-          className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow md:block"
+          className="hs-collapse hidden overflow-hidden transition-all duration-500 ease-in-out basis-full grow md:block"
           aria-labelledby="hs-navbar-floating-dark-collapse"
         >
           <div className="flex flex-col md:flex-row md:items-center md:justify-end gap-y-3 py-2 md:py-0 md:ps-7">
-            <a
-              className="pe-3 ps-px sm:px-3 md:py-4 text-sm text-black hover:text-neutral-700 focus:outline-none focus:text-neutral-700"
-              href="/dashboard"
-              aria-current="page"
-            >
+            <NavItem to="/dashboard" onClick={() => setShowMobileMessages(false)} showMobileMessages={showMobileMessages}>
               Home
-            </a>
-            <a
-              className="pe-3 ps-px sm:px-3 md:py-4 text-sm text-black hover:text-neutral-700 focus:outline-none focus:text-neutral-700"
-              href="#"
-            >
+            </NavItem>
+            <NavItem to="/stories" showMobileMessages={showMobileMessages}>
               Stories
-            </a>
-            <a
-              className="pe-3 ps-px sm:px-3 md:py-4 text-sm text-black hover:text-neutral-700 focus:outline-none focus:text-neutral-700"
-              href="/userProfile"
-            >
+            </NavItem>
+            <NavItem to="/userProfile" showMobileMessages={showMobileMessages}>
               Profile
-            </a>
-            <a
-              className="pe-3 ps-px sm:px-3 md:py-4 text-sm text-black hover:text-neutral-700 focus:outline-none focus:text-neutral-700"
-              href="/groupsFunctionality"
+            </NavItem>
+            <NavItem to="/groupsFunctionality" showMobileMessages={showMobileMessages}>
+              Groups
+            </NavItem>
+            <NavItem 
+              isMessagesTab={true}
+              onClick={() => {
+                if (window.location.pathname !== '/dashboard') {
+                  navigate('/dashboard?messages=true');
+                } else {
+                  setShowMobileMessages(!showMobileMessages);
+                }
+              }}
+              showMobileMessages={showMobileMessages}
             >
-               Groups
-            </a>
+              Messages
+            </NavItem>
           </div>
         </div>
         {/* End Collapse */}

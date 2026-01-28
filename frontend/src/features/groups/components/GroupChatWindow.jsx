@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { Send } from "lucide-react";
 import axios from "axios";
-import { NoteContext } from "./ContextApi/CreateContext";
-import PollMessage from "./PollMessage";
+import { NoteContext } from "../../../ContextApi/CreateContext";
+import PollMessageComponent from "../../messaging/components/PollMessageComponent";
 
 const EditPlanForm = ({ plan, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -81,6 +81,8 @@ const GroupChatWindow = ({
   memberCount,
   groupCreatorId,
   groupMembers,
+  isMobile = false,
+  onBack,
 }) => {
   const { socket, onlineUsers } = useContext(NoteContext);
 
@@ -518,16 +520,29 @@ const GroupChatWindow = ({
       {/* header */}
       <div className="sticky top-0 z-10 px-4 py-2 border-b border-gray-300 bg-white shadow-sm">
         <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-base font-semibold text-gray-800">
-              {groupName}
-            </h3>
-            <p className="text-xs text-gray-500">
-              {memberCount} members |{" "}
-              <span className="text-green-400 font-semibold">
-                {onlineCount} online
-              </span>
-            </p>
+          <div className="flex items-center space-x-3">
+            {/* Back button for mobile */}
+            {isMobile && onBack && (
+              <button
+                onClick={onBack}
+                className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 transition-colors self-center"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            )}
+            <div>
+              <h3 className="text-base font-semibold text-gray-800">
+                {groupName}
+              </h3>
+              <p className="text-xs text-gray-500">
+                {memberCount} members |{" "}
+                <span className="text-green-400 font-semibold">
+                  {onlineCount} online
+                </span>
+              </p>
+            </div>
           </div>
 
           {groupCreatorId._id === userid && (
@@ -699,7 +714,7 @@ const GroupChatWindow = ({
                 isCurrentPoll ? "ring-2 ring-blue-400 rounded-xl" : ""
               }`}
             >
-              <PollMessage
+              <PollMessageComponent
                 message={message}
                 userid={userid}
                 onVoteUpdate={handlePollVoteUpdate}

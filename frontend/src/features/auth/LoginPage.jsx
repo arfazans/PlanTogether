@@ -1,13 +1,13 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import loginImage from "./assets/loginImage3.jpg";
+import loginImage from "../../../assets/loginImage3.jpg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { NoteContext } from "./ContextApi/CreateContext";
+import { NoteContext } from "../../../ContextApi/CreateContext";
 import toast, { Toaster } from 'react-hot-toast';
 
 
-function Login() {
+function LoginPage() {
   const URL = "http://localhost:9860";
   const { setUserId } = useContext(NoteContext);
   const [checked, setchecked] = useState(false);
@@ -644,4 +644,4 @@ const ImageWrapper = styled.div`
   }
 `;
 
-export default Login;
+export default LoginPage;

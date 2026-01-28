@@ -1,4 +1,4 @@
-    const StaticUserList = () => {
+const UserListStatic = () => {
     return (
         <div className="flex flex-col h-full bg-transparent text-gray-100">
         {/* Header */}
@@ -197,4 +197,4 @@
     );
     };
 
-    export default StaticUserList;
+    export default UserListStatic;

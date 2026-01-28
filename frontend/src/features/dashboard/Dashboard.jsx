@@ -1,12 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
-import Navbar from "./Navbar";
-import Chatbot_Container from "./Chatbot_Container";
-import chatboticon from "./assets/chat.png";
-import ChatWindow from "./ChatWindow";
-import GroupChatWindow from "./GroupChatWindow";
-import aman from "./assets/aman.jpg";
+import Navbar from "../../shared/components/layout/Navbar";
+import Chatbot_Container from "../../features/messaging/components/Chatbot_Container";
+import chatboticon from "../../assets/chat.png";
+import ChatWindow from "../../features/messaging/components/ChatWindow";
+import GroupChatWindow from "../../features/groups/components/GroupChatWindow";
+import aman from "../../assets/aman.jpg";
 import axios from "axios";
-import { NoteContext } from "./ContextApi/CreateContext";
+import { NoteContext } from "../../ContextApi/CreateContext";
+import UserListItem from "../../shared/components/ui/UserListItem";
+import GroupListItem from "../../shared/components/ui/GroupListItem";
+import UserList from "../../shared/components/ui/UserList";
+import GroupList from "../../shared/components/ui/GroupList";
 
 function Dashboard() {
   const URL = "http://localhost:9860";
@@ -21,6 +25,9 @@ function Dashboard() {
   const [showComments, setShowComments] = useState({});
   const [newComment, setNewComment] = useState({});
   const [showLikes, setShowLikes] = useState({});
+  // Mobile states
+  const [showMobileMessages, setShowMobileMessages] = useState(false);
+  const [mobileMessageTab, setMobileMessageTab] = useState('users'); // 'users', 'groups', 'chatbot'
   const {
     recentMessages,
     userId,
@@ -41,6 +48,22 @@ function Dashboard() {
     setSelectedGroupId(groupId);
     setSelectedUserId(null); // Clear user selection
   };
+
+  // Handle back to list on mobile
+  const handleBackToList = () => {
+    setSelectedUserId(null);
+    setSelectedGroupId(null);
+  };
+
+  // Check URL parameter for messages on component mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('messages') === 'true') {
+      setShowMobileMessages(true);
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   // Fetch all users except the logged-in user for the sidebar
   useEffect(() => {
@@ -126,19 +149,55 @@ function Dashboard() {
 
   return (
     <div className="h-screen w-full flex flex-col bg-[#232946] relative">
-      <Navbar />
+      <Navbar showMobileMessages={showMobileMessages} setShowMobileMessages={setShowMobileMessages} />
+
+      {/* Mobile message tabs - only show when showMobileMessages is true */}
+      {showMobileMessages && (
+        <div className="md:hidden bg-[#232946] border-b border-gray-600 mt-14">
+          <div className="flex">
+            <button
+              onClick={() => setMobileMessageTab('users')}
+              className={`flex-1 p-3 text-white font-medium transition-colors ${
+                mobileMessageTab === 'users' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'
+              }`}
+            >
+              Users
+            </button>
+            <button
+              onClick={() => setMobileMessageTab('groups')}
+              className={`flex-1 p-3 text-white font-medium transition-colors ${
+                mobileMessageTab === 'groups' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'
+              }`}
+            >
+              Groups
+            </button>
+            <button
+              onClick={() => setMobileMessageTab('chatbot')}
+              className={`flex-1 p-3 text-white font-medium transition-colors ${
+                mobileMessageTab === 'chatbot' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'
+              }`}
+            >
+              Chatbot
+            </button>
+          </div>
+        </div>
+      )}
 
       <main className="flex-1 overflow-hidden">
         <div
-          className={`grid mt-14 w-full ${
-            showchatbot
-              ? "grid-cols-[15.625rem_1fr_21rem]"
-              : "grid-cols-[15.625rem_1fr]"
+          className={`grid w-full ${
+            showMobileMessages 
+              ? "md:grid-cols-[15.625rem_1fr] grid-cols-1 mt-0" 
+              : showchatbot
+              ? "md:grid-cols-[15.625rem_1fr_21rem] grid-cols-1 mt-14"
+              : "md:grid-cols-[15.625rem_1fr] grid-cols-1 mt-14"
           }`}
-          style={{ height: "calc(100vh - 108px)" }}
+          style={{ height: showMobileMessages ? "calc(100vh - 160px)" : "calc(100vh - 108px)" }}
         >
-          {/* Left column - User sidebar */}
-          <div className="bg-[#232946] rounded-t-2xl h-full flex flex-col overflow-hidden">
+          {/* Left column - User sidebar - hidden on mobile when showMobileMessages is false */}
+          <div className={`bg-[#232946] rounded-t-2xl h-full flex-col overflow-hidden ${
+            showMobileMessages ? 'hidden md:flex' : 'hidden md:flex'
+          }`}>
             <div className="flex border-2 border-black rounded-t-2xl overflow-hidden flex-shrink-0">
               <button
                 onClick={() => setActiveTab('users')}
@@ -161,114 +220,107 @@ function Dashboard() {
             {/* Scrollable content area */}
             <div className="flex-1 overflow-y-auto p-2 space-y-2 scrollbar-hide">
             {activeTab === 'users' && users.map((user, index) => (
-              <div
+              <UserListItem
                 key={index}
-                onClick={() => handleUserSelect(user._id)}
-                className={`cursor-pointer p-3 rounded-lg transition-all duration-300 ease-in-out flex items-center ${
-        selectedUserId === user._id
-          ? "bg-neutral-500 shadow-md shadow-gray-400/50"
-          : "bg-neutral-700 hover:bg-neutral-600 hover:shadow-lg hover:shadow-gray-500/50 hover:scale-[1.02]"
-      }`}
-              >
-                {/* Profile Image */}
-                <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 mr-3">
-                  <img
-                    src={user.profileImage || aman}
-                    alt="User Avatar"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                {/* Text Container */}
-                <div className="flex-1 min-w-0">
-                  {/* Name and Online Row */}
-                  <div className="flex items-center space-x-2 mb-1">
-                    <h1 className="text-white font-semibold text-sm truncate">
-                      {user.name}
-                    </h1>
-                    {/* Online indicator */}
-                    {onlineUsers.includes(String(user._id)) && (
-                      <span className="text-green-400 text-xs font-semibold">
-                        online
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Last message and unread dot row */}
-                  <div className="flex items-center space-x-2">
-                    <p
-                      className={`text-gray-300 text-xs truncate flex-1 ${
-                        unreadUsers[user._id] ? "font-bold text-white" : ""
-                      }`}
-                    >
-                      {recentMessages[user._id] || "No messages yet"}
-                    </p>
-
-                    {unreadUsers[user._id] && (
-                      <span className="w-2 h-2 rounded-full bg-white flex-shrink-0"></span>
-                    )}
-                  </div>
-                </div>
-              </div>
+                user={user}
+                onlineUsers={onlineUsers}
+                unreadUsers={unreadUsers}
+                recentMessages={recentMessages}
+                onClick={handleUserSelect}
+                isSelected={selectedUserId === user._id}
+              />
             ))}
             {activeTab === 'groups' && groups.map((group, index) => (
-              <div
+              <GroupListItem
                 key={index}
-                onClick={() => handleGroupSelect(group._id)}
-                className={`cursor-pointer p-3 rounded-lg transition-all duration-300 ease-in-out flex items-center ${
-        selectedGroupId === group._id
-          ? "bg-neutral-500 shadow-md shadow-gray-400/50"
-          : "bg-neutral-700 hover:bg-neutral-600 hover:shadow-lg hover:shadow-gray-500/50 hover:scale-[1.02]"
-      }`}
-              >
-                {/* Group Icon */}
-                <div className="w-10 h-10 rounded-full flex-shrink-0 mr-3 bg-blue-500 flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">
-                    {group.name.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-
-                {/* Text Container */}
-                <div className="flex-1 min-w-0">
-                  {/* Group name */}
-                  <div className="mb-1">
-                    <h1 className="text-white font-semibold text-sm truncate">
-                      {group.name}
-                    </h1>
-                  </div>
-
-                  {/* Member count */}
-                  <div>
-                    <p className="text-gray-300 text-xs truncate">
-                      {group.members.length} members
-                    </p>
-                  </div>
-                </div>
-              </div>
+                group={group}
+                onClick={handleGroupSelect}
+                isSelected={selectedGroupId === group._id}
+              />
             ))}
             </div>
           </div>
 
           {/* Middle column - Posts feed or Chat */}
-          <div className="rounded-t-2xl bg-[#edf0f3] h-full overflow-hidden">
-            {selectedUserId ? (
-              <ChatWindow
-                sendigToUsersId={selectedUserId}
-                userid={userId}
-                showChatbot={showchatbot}
-                otherUserName={users.find(u => u._id === selectedUserId)?.name || 'User'}
-              />
-            ) : selectedGroupId ? (
-              <GroupChatWindow
-                groupId={selectedGroupId}
-                userid={userId}
-                groupName={groups.find(g => g._id === selectedGroupId)?.name || 'Group Chat'}
-                memberCount={groups.find(g => g._id === selectedGroupId)?.members.length || 0}
-                groupCreatorId={groups.find(g => g._id === selectedGroupId)?.createdBy || null}
-                groupMembers = {groups.find(g=>g._id === selectedGroupId)?.members || []}
-                showChatbot={showchatbot}
-              />
-            ) : (
+          <div className="md:rounded-t-2xl bg-[#edf0f3] h-full overflow-hidden">
+            {/* Mobile message view */}
+            {showMobileMessages && (
+              <div className="md:hidden h-full">
+                {mobileMessageTab === 'users' && (
+                  <div className="h-full flex flex-col">
+                    {selectedUserId ? (
+                      <ChatWindow
+                        sendigToUsersId={selectedUserId}
+                        userid={userId}
+                        showChatbot={false}
+                        otherUserName={users.find(u => u._id === selectedUserId)?.name || 'User'}
+                        isMobile={true}
+                        onBack={handleBackToList}
+                      />
+                    ) : (
+                      <UserList
+                        users={users}
+                        onlineUsers={onlineUsers}
+                        unreadUsers={unreadUsers}
+                        recentMessages={recentMessages}
+                        onUserSelect={handleUserSelect}
+                        selectedUserId={selectedUserId}
+                      />
+                    )}
+                  </div>
+                )}
+                {mobileMessageTab === 'groups' && (
+                  <div className="h-full flex flex-col">
+                    {selectedGroupId ? (
+                      <GroupChatWindow
+                        groupId={selectedGroupId}
+                        userid={userId}
+                        groupName={groups.find(g => g._id === selectedGroupId)?.name || 'Group Chat'}
+                        memberCount={groups.find(g => g._id === selectedGroupId)?.members.length || 0}
+                        groupCreatorId={groups.find(g => g._id === selectedGroupId)?.createdBy || null}
+                        groupMembers={groups.find(g=>g._id === selectedGroupId)?.members || []}
+                        showChatbot={false}
+                        isMobile={true}
+                        onBack={handleBackToList}
+                      />
+                    ) : (
+                      <GroupList
+                        groups={groups}
+                        onGroupSelect={handleGroupSelect}
+                        selectedGroupId={selectedGroupId}
+                      />
+                    )}
+                  </div>
+                )}
+                {mobileMessageTab === 'chatbot' && (
+                  <div className="h-full bg-[#232946]">
+                    <Chatbot_Container isMobile={true} />
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {/* Desktop view or mobile posts view */}
+            {!showMobileMessages && (
+              <>
+                {selectedUserId ? (
+                  <ChatWindow
+                    sendigToUsersId={selectedUserId}
+                    userid={userId}
+                    showChatbot={showchatbot}
+                    otherUserName={users.find(u => u._id === selectedUserId)?.name || 'User'}
+                  />
+                ) : selectedGroupId ? (
+                  <GroupChatWindow
+                    groupId={selectedGroupId}
+                    userid={userId}
+                    groupName={groups.find(g => g._id === selectedGroupId)?.name || 'Group Chat'}
+                    memberCount={groups.find(g => g._id === selectedGroupId)?.members.length || 0}
+                    groupCreatorId={groups.find(g => g._id === selectedGroupId)?.createdBy || null}
+                    groupMembers = {groups.find(g=>g._id === selectedGroupId)?.members || []}
+                    showChatbot={showchatbot}
+                  />
+                ) : (
               <div className="h-full overflow-y-auto p-4">
                 <div className="max-w-2xl mx-auto space-y-4">
                   {posts.length === 0 ? (
@@ -316,15 +368,7 @@ function Dashboard() {
                                   >
                                     Delete
                                   </button>
-                                  <div>
-                                    console.log("Hello aman");
 
-
-                                    if (condition) {
-                                      
-                                    }
-
-                                  </div>
                                 </div>
                               )}
                             </div>
@@ -488,19 +532,24 @@ function Dashboard() {
                     ))
                   )}
                 </div>
-              </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
-          {/* Right column - Chatbot */}
-          {showchatbot ? (
-            <div className="bg-[#232946] rounded-t-2xl h-full">
+          {/* Right column - Chatbot - hidden on mobile */}
+          {showchatbot && !showMobileMessages && (
+            <div className="hidden md:block bg-[#232946] rounded-t-2xl h-full">
               <Chatbot_Container onClose={() => setshowchatbot(false)} />
             </div>
-          ) : (
+          )}
+          
+          {/* Chatbot icon - hidden on mobile when showMobileMessages is true */}
+          {!showchatbot && !showMobileMessages && (
             <img
               onClick={() => setshowchatbot(true)}
-              className="absolute w-12 bottom-6 right-6 cursor-pointer h-auto"
+              className="absolute w-12 bottom-6 right-6 cursor-pointer h-auto md:block hidden"
               src={chatboticon}
               alt="chatbot"
             />

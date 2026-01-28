@@ -4,7 +4,7 @@ import axios from "axios";
 
 const URL = "http://localhost:9860";
 
-const ProtectedRoute = ({ children }) => {
+const AuthProtectedRoute = ({ children }) => {
   const [isAuthorized, setIsAuthorized] = useState(null);
 
   useEffect(() => {
@@ -36,7 +36,4 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-export default ProtectedRoute;
-
-
-
+export default AuthProtectedRoute;

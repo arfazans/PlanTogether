@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const CreatePlanForm = ({ onSave, onCancel, groupId }) => {
+const PlanCreationForm = ({ onSave, onCancel, groupId }) => {
   const [formData, setFormData] = useState({
     eventName: '',
     dateTime: '',
@@ -106,4 +106,4 @@ const CreatePlanForm = ({ onSave, onCancel, groupId }) => {
   );
 };
 
-export default CreatePlanForm;
+export default PlanCreationForm;
